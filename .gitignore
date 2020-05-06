@@ -1,0 +1,9 @@
+node_modules/
+out
+dist
+
+/target/
+Cargo.lock
+**/*.rs.bk
+
+.idea/
