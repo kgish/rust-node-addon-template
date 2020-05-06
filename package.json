@@ -1,0 +1,22 @@
+{
+  "name": "rust-node-addon-template",
+  "version": "1.0.0",
+  "description": "Rust Node Addon example template using N-API",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/kgish/rust-node-addon-template.git"
+  },
+  "keywords": [
+    "rust"
+  ],
+  "author": "Kiffin Gish <kiffin.gish@planet.nl> (http://github.com/kgish)",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/kgish/rust-node-addon-template/issues"
+  },
+  "homepage": "https://github.com/kgish/rust-node-addon-template#readme"
+}
