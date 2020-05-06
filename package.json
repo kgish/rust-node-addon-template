@@ -3,6 +3,10 @@
   "version": "1.0.0",
   "description": "Rust Node Addon example template using N-API",
   "main": "index.js",
+  "engines": {
+    "node": "^12.16.3",
+    "npm": "^6.14.4"
+  },
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"
   },
@@ -11,7 +15,9 @@
     "url": "git+https://github.com/kgish/rust-node-addon-template.git"
   },
   "keywords": [
-    "rust"
+    "rust",
+    "node",
+    "n-api"
   ],
   "author": "Kiffin Gish <kiffin.gish@planet.nl> (http://github.com/kgish)",
   "license": "MIT",
