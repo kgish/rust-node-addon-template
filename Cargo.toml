@@ -1,0 +1,7 @@
+[package]
+name = "rust-node-addon-template"
+version = "0.1.0"
+authors = ["Kiffin Gish <kiffin.gish@planet.nl>"]
+edition = "2018"
+
+[dependencies]

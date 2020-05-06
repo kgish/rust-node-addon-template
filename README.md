@@ -9,3 +9,10 @@ For this project template, you are required to have the following items already 
 * [Rust](https://www.rust-lang.org/)
 * [Node.js](https://nodejs.org/en/)
 * [npm](https://www.npmjs.com/)
+
+## Installation
+
+```bash
+$ npm init
+$ cargo init --lib
+```
