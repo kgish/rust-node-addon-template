@@ -1,17 +1,5 @@
-node_modules/
-out
-dist
-
 /target/
 Cargo.lock
 **/*.rs.bk
-
+index.node
 .idea/
-
-
-#Added by cargo
-#
-#already existing elements were commented out
-
-/target
-#Cargo.lock
