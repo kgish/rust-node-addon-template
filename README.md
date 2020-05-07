@@ -24,6 +24,7 @@ Download the project from github:
 ```bash
 $ git clone https://github.com/kgish/rust-node-addon-template.git
 $ cd rust-node-addon-template 
+$ chmod +x *.sh
 ```
 
 Ensure that you have the correct Node version installed:
@@ -36,23 +37,13 @@ $ nvm use 12.16.3
 ## Build
 
 ```bash
-$ cargo build --release
-$ cp target/release/librust_node_addon_template.so index.node
+$ ./build.sh
 ```
 
 ## Run
 
 ```bash
-$ node
-Welcome to Node.js v12.16.3.
-Type ".help" for more information.
-> require('./index.node')
-{ hello: 'world!' }
-> let addon = require('./index.node')
-undefined
-> console.log(addon.hello)
-world!
-undefined
+$ ./run.sh
 ```
 
 ## From Scratch
@@ -73,7 +64,7 @@ The `--crate-type=cdylib` flag produces a dynamic system library which is used w
 
 The project directory should look like this:
 
-```
+```text
 ├── Cargo.toml
 ├── package.json
 └── src
@@ -82,12 +73,14 @@ The project directory should look like this:
 
 Add the `nodejs-sys` crate (native bindings to the nodejs' n-api) as a dependency to the `Cargo.toml` file:
 
-```
+```text
 [dependencies]
 nodejs-sys = "0.3.0"
 ```
 
 ## References
+
+Here are a few relevant links that you might find interesting.
 
 * [N-API Documentation](https://nodejs.org/api/n-api.html#n_api_n_api)
 * [nodejs-sys](https://crates.io/crates/nodejs-sys)
@@ -95,3 +88,4 @@ nodejs-sys = "0.3.0"
 * [Application Binary Interface (ABI)](https://doc.rust-lang.org/reference/abi.html)
 * [Rust and Node.js: A match made in heaven](https://blog.logrocket.com/rust-and-node-js-a-match-made-in-heaven/)
 * [Writing fast and safe native Node.js modules with Rust](https://blog.risingstack.com/node-js-native-modules-with-rust/)
+* [Using rust modules in JavaScript/Web Development](https://medium.com/@atulanand94/using-rust-modules-for-javascript-web-development-part-i-e6dec27df7b2)
