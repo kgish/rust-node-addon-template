@@ -1,7 +1,8 @@
 let addon = require('./index.node');
 
-// console.log(`addon.hello = '${addon.hello}'`);
+console.log(`index.js: addon = '${JSON.stringify(addon)}'`);
+console.log(`index.js: addon.hello = '${addon.hello}'`);
 
-console.log(`addon.myFunc = '${addon.myFunc}'`);
-console.log(`addon.myFunc() = '${addon.myFunc()}'`);
+console.log(`index.js: addon.myFunc = '${addon.myFunc}'`);
+console.log(`index.js: addon.myFunc() = '${addon.myFunc()}'`);
 
