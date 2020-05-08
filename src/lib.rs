@@ -44,26 +44,28 @@ pub unsafe extern "C" fn napi_register_module_v1(
 
     println!("lib.rs: napi_register_module_v1()");
 
-    let key = CString::new("hello").expect("CString::new failed");
-    let value = CString::new("world!").expect("CString::new failed");
-    let mut local: napi_value = std::mem::zeroed();
+    let key = CString::new("name").expect("CString::new failed");
+    let value = CString::new("Kiffin Gish").expect("CString::new failed");
+    let mut local1: napi_value = std::mem::zeroed();
 
     napi_create_string_utf8(
         env,
         value.as_ptr(),
         str_len(&value),
-        &mut local,
+        &mut local1,
     );
 
     napi_set_named_property(
         env,
         exports,
         key.as_ptr(),
-        local,
+        local1,
     );
 
+    // --- Create a function: say_hello() => string --- //
+
     let p = CString::new("say_hello").expect("CString::new failed");
-    // let mut local: napi_value = std::mem::zeroed();
+    let mut local2: napi_value = std::mem::zeroed();
 
     napi_create_function(
         env,
@@ -71,39 +73,44 @@ pub unsafe extern "C" fn napi_register_module_v1(
         str_len(&p),
         Some(say_hello),
         std::ptr::null_mut(),
-        &mut local,
+        &mut local2,
     );
 
-    napi_set_named_property(env, exports, p.as_ptr(), local);
+    napi_set_named_property(env, exports, p.as_ptr(), local2);
 
-    let p = CString::new("add").expect("CString::new failed");
-    // let mut local: napi_value = std::mem::zeroed();
+    // --- Create a function passing integers: add_doubles() -> double --- //
+
+    let p = CString::new("add_doubles").expect("CString::new failed");
+    let mut local3: napi_value = std::mem::zeroed();
 
     napi_create_function(
         env,
         p.as_ptr(),
         str_len(&p),
-        Some(add),
+        Some(add_doubles),
         std::ptr::null_mut(),
-        &mut local,
+        &mut local3,
     );
 
-    napi_set_named_property(env, exports, p.as_ptr(), local);
+    napi_set_named_property(env, exports, p.as_ptr(), local3);
+
+    // --- Create a function passing strings--- //
 
     exports
 }
 
 #[no_mangle]
 pub unsafe extern "C" fn say_hello(env: napi_env, _info: napi_callback_info) -> napi_value {
-    println!("lib.rs: say_hello()");
 
     let mut local: napi_value = std::mem::zeroed();
-    let p = CString::new("Hello from rust!").expect("CString::new failed");
+    let result = CString::new("Hello from the kingdom of Rust!").expect("CString::new failed");
+
+    println!("lib.rs: say_hello() => {:?}", result);
 
     napi_create_string_utf8(
         env,
-        p.as_ptr(),
-        str_len(&p),
+        result.as_ptr(),
+        str_len(&result),
         &mut local,
     );
 
@@ -111,11 +118,11 @@ pub unsafe extern "C" fn say_hello(env: napi_env, _info: napi_callback_info) -> 
 }
 
 #[no_mangle]
-pub unsafe extern "C" fn add(env: napi_env, info: napi_callback_info) -> napi_value {
+pub unsafe extern "C" fn add_doubles(env: napi_env, info: napi_callback_info) -> napi_value {
 
     let mut buffer: [napi_value; 2] = std::mem::MaybeUninit::zeroed().assume_init();
     let mut argc = 2 as usize;
-    let mut local: napi_value = std::mem::zeroed();
+    let mut result: napi_value = std::mem::zeroed();
 
     napi_get_cb_info(
         env,
@@ -132,11 +139,13 @@ pub unsafe extern "C" fn add(env: napi_env, info: napi_callback_info) -> napi_va
     napi_get_value_double(env, buffer[0], &mut x);
     napi_get_value_double(env, buffer[1], &mut y);
 
-    println!("lib.rs: add({},{})", x, y);
+    let value = x + y;
 
-    napi_create_double(env, x + y, &mut local);
+    println!("lib.rs: add_doubles({},{}) => {:?}", x, y, value);
 
-    local
+    napi_create_double(env, value, &mut result);
+
+    result
 }
 
 fn str_len(s: &CString) -> usize {
