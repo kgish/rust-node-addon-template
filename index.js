@@ -28,8 +28,7 @@ if (n === 0 || n === 4) {
 
 if (n === 0 || n === 5) {
     console.log(`index.js: addon.fibonacci = '${addon.fibonacci}'`);
-    console.log(`index.js: addon.fibonacci() = '${addon.fibonacci()}'`);
-    const n = 25;
+    const n = 80;
     addon.fibonacci(n).then(
         result => console.log(`index.js: addon.fibonacci(${n}) => OK '${result}'`),
         error => console.log(`index.js: addon.fibonacci(${n}) => NOK '${error}'`),

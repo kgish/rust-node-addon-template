@@ -1,6 +1,6 @@
 # Rust Node Addon Template
 
-Rust Node Addon example template using N-API
+A simple Rust Node addon example template using N-API
 
 ## Requirements
 
@@ -17,7 +17,14 @@ You will also require the clang and llvm-dev libraries:
 $ sudo apt-get install llvm-dev clang
 ```
 
-## Installation
+Ensure that you have the correct Node version installed:
+
+```bash
+$ nvm install 12.16.3
+$ nvm use 12.16.3
+```
+
+## Installation and setup
 
 Download the project from github:
 
@@ -25,13 +32,6 @@ Download the project from github:
 $ git clone https://github.com/kgish/rust-node-addon-template.git
 $ cd rust-node-addon-template 
 $ chmod +x *.sh
-```
-
-Ensure that you have the correct Node version installed:
-
-```bash
-$ nvm install 12.16.3
-$ nvm use 12.16.3
 ```
 
 ## Build
@@ -43,10 +43,20 @@ $ ./build.sh
 ## Run
 
 ```bash
-$ ./run.sh
+$ ./run.sh [n]
 ```
 
+where optional n = 1 - 5 in order to run only given example:
+
+1. Object name
+2. Function say_hello()
+3. Function add_doubles(x,y)
+4. Function send_message(str)
+5. Promise fibonacci(n)
+
 ## From Scratch
+
+Rather than cloning the github project, you might prefer to build everything from scratch. 
 
 Initialize the node project and create the `package.json` configuration file by running:
 
@@ -76,6 +86,37 @@ Add the `nodejs-sys` crate (native bindings to the nodejs' n-api) as a dependenc
 ```text
 [dependencies]
 nodejs-sys = "0.3.0"
+```
+
+Create the following files in the root directory:
+
+build.sh
+```bash
+#!/usr/bin/env bash
+
+cargo build --release && cp ./target/release/librust_node_addon_template.so index.node
+```
+
+run.sh
+```bash
+#!/usr/bin/env bash
+
+node ./index.js $1
+```
+
+index.js
+```javascript
+let addon = require('./index.node');
+
+// Add stuff you want to use here
+```
+
+Run the demo.
+
+```bash
+$ chmod +x *.sh
+$ ./build.sh
+$ ./run.sh
 ```
 
 ## References

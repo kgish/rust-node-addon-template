@@ -1,14 +1,11 @@
 // Raw bindings to the Node.js API
 use nodejs_sys::{
-    napi_callback_info, napi_create_double, napi_create_function, napi_create_string_utf8,
-    napi_env, napi_get_cb_info, napi_get_undefined, napi_get_value_double,
-    napi_get_value_string_utf8, napi_set_named_property, napi_value,
-
-    napi_async_work, napi_create_async_work, napi_create_error,
-    napi_create_int64, napi_create_promise,
-    napi_deferred, napi_delete_async_work, napi_get_value_int64,
-    napi_queue_async_work, napi_reject_deferred, napi_resolve_deferred,
-    napi_status
+    napi_async_work, napi_callback_info, napi_create_async_work, napi_create_double,
+    napi_create_error, napi_create_function, napi_create_int64, napi_create_promise,
+    napi_create_string_utf8, napi_deferred, napi_delete_async_work, napi_env, napi_get_cb_info,
+    napi_get_undefined, napi_get_value_double, napi_get_value_int64, napi_get_value_string_utf8,
+    napi_queue_async_work, napi_reject_deferred, napi_resolve_deferred, napi_set_named_property,
+    napi_status, napi_value,
 };
 
 // FFI bindings
@@ -42,14 +39,18 @@ use std::ffi::c_void;
 //   napi_env: https://docs.rs/nodejs-sys/0.3.0/nodejs_sys/type.napi_env.html
 //   napi_value: https://docs.rs/nodejs-sys/0.3.0/nodejs_sys/type.napi_value.html
 // Functions:
-//   napi_create_string_utf8: https://docs.rs/nodejs-sys/0.3.0/nodejs_sys/fn.napi_create_string_utf8.html
-//   napi_set_named_property: https://docs.rs/nodejs-sys/0.3.0/nodejs_sys/fn.napi_set_named_property.html
-//   napi_create_function: https://docs.rs/nodejs-sys/0.2.0/nodejs_sys/fn.napi_create_function.html
-//   napi_get_cb_info: https://docs.rs/nodejs-sys/0.3.0/nodejs_sys/fn.napi_get_cb_info.html
-//   napi_get_value_double: https://docs.rs/nodejs-sys/0.3.0/nodejs_sys/fn.napi_get_value_double.html
 //   napi_create_double: https://docs.rs/nodejs-sys/0.3.0/nodejs_sys/fn.napi_create_double.html
+//   napi_create_error: https://docs.rs/nodejs-sys/0.3.0/nodejs_sys/fn.napi_create_error.html
+//   napi_create_function: https://docs.rs/nodejs-sys/0.2.0/nodejs_sys/fn.napi_create_function.html
+//   napi_create_int64: https://docs.rs/nodejs-sys/0.3.0/nodejs_sys/fn.napi_create_int64.html
+//   napi_create_string_utf8: https://docs.rs/nodejs-sys/0.3.0/nodejs_sys/fn.napi_create_string_utf8.html
+//   napi_get_cb_info: https://docs.rs/nodejs-sys/0.3.0/nodejs_sys/fn.napi_get_cb_info.html
 //   napi_get_undefined: https://docs.rs/nodejs-sys/0.3.0/nodejs_sys/fn.napi_get_undefined.html
+//   napi_get_value_double: https://docs.rs/nodejs-sys/0.3.0/nodejs_sys/fn.napi_get_value_double.html
+//   napi_get_value_int64: https://docs.rs/nodejs-sys/0.3.0/nodejs_sys/fn.napi_get_value_int64.html
 //   napi_get_value_string_utf8: https://docs.rs/nodejs-sys/0.3.0/nodejs_sys/fn.napi_get_value_string_utf8.html
+//   napi_set_named_property: https://docs.rs/nodejs-sys/0.3.0/nodejs_sys/fn.napi_set_named_property.html
+//   napi_status: https://docs.rs/nodejs-sys/0.3.0/nodejs_sys/enum.napi_status.html
 
 // --- Register module --- //
 
@@ -122,6 +123,7 @@ pub unsafe extern "C" fn napi_register_module_v1(
 
     let str5 = CString::new("fibonacci").expect("CString::new failed");
     let mut result5: napi_value = std::mem::zeroed();
+
     napi_create_function(
         env,
         str_ptr(&str5),
@@ -130,6 +132,7 @@ pub unsafe extern "C" fn napi_register_module_v1(
         std::ptr::null_mut(),
         &mut result5,
     );
+
     napi_set_named_property(env, exports, str_ptr(&str5), result5);
 
     exports
@@ -209,7 +212,6 @@ pub unsafe extern "C" fn send_message(env: napi_env, info: napi_callback_info) -
 
     println!("lib.rs: send_message({})", s);
 
-    // Function
     let mut und: napi_value = std::mem::zeroed();
     napi_get_undefined(env, &mut und);
 
@@ -229,6 +231,7 @@ pub unsafe extern "C" fn fibonacci(env: napi_env, info: napi_callback_info) -> n
     let p = buffer.as_mut_ptr();
     let mut argc = 1 as usize;
     std::mem::forget(buffer);
+
     napi_get_cb_info(
         env,
         info,
@@ -237,23 +240,34 @@ pub unsafe extern "C" fn fibonacci(env: napi_env, info: napi_callback_info) -> n
         std::ptr::null_mut(),
         std::ptr::null_mut(),
     );
+
     let mut start = 0;
     napi_get_value_int64(env, *p, &mut start);
+
     let mut promise: napi_value = std::mem::zeroed();
     let mut deferred: napi_deferred = std::mem::zeroed();
     let mut work_name: napi_value = std::mem::zeroed();
     let mut work: napi_async_work = std::mem::zeroed();
+
     let async_name = CString::new("async fibonacci").expect("Error creating string");
-    napi_create_string_utf8(env, async_name.as_ptr(), 13, &mut work_name);
+    napi_create_string_utf8(
+        env,
+        str_ptr(&async_name),
+        str_len(&async_name),
+        &mut work_name,
+    );
     napi_create_promise(env, &mut deferred, &mut promise);
+
     let v = Data {
         deferred,
         work,
         val: start as u64,
         result: None,
     };
+
     let data = Box::new(v);
     let raw = Box::into_raw(data);
+
     napi_create_async_work(
         env,
         std::ptr::null_mut(),
@@ -263,8 +277,11 @@ pub unsafe extern "C" fn fibonacci(env: napi_env, info: napi_callback_info) -> n
         std::mem::transmute(raw),
         &mut work,
     );
+
     napi_queue_async_work(env, work);
     (*raw).work = work;
+
+    println!("lib.rs: fibonacci({})", start);
 
     promise
 }
@@ -273,12 +290,20 @@ pub unsafe extern "C" fn perform(_env: napi_env, data: *mut c_void) {
     let mut t: Box<Data> = Box::from_raw(std::mem::transmute(data));
     let mut last = 1;
     let mut second_last = 0;
+
     for _ in 2..t.val {
         let temp = last;
         last = last + second_last;
         second_last = temp;
     }
+
     t.result = Some(Ok(last));
+
+    println!(
+        "lib.rs: perform() val='{:?}' result='{:?}'",
+        t.val, t.result
+    );
+
     Box::into_raw(t);
 }
 
@@ -286,7 +311,10 @@ pub unsafe extern "C" fn complete(env: napi_env, _status: napi_status, data: *mu
     let t: Box<Data> = Box::from_raw(std::mem::transmute(data));
     let v = match t.result {
         Some(d) => match d {
-            Ok(result) => result,
+            Ok(result) => {
+                println!("lib.rs: complete() result='{:?}'", result);
+                result
+            },
             Err(_) => {
                 let mut js_error: napi_value = std::mem::zeroed();
                 napi_create_error(
