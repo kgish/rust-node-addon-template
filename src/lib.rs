@@ -44,57 +44,59 @@ pub unsafe extern "C" fn napi_register_module_v1(
 
     println!("lib.rs: napi_register_module_v1()");
 
-    let key = CString::new("name").expect("CString::new failed");
-    let value = CString::new("Kiffin Gish").expect("CString::new failed");
-    let mut local1: napi_value = std::mem::zeroed();
+    // --- 1. Create an object -> { key: value } --- //
+
+    let key1 = CString::new("name").expect("CString::new failed");
+    let val1 = CString::new("Kiffin Gish").expect("CString::new failed");
+    let mut result1: napi_value = std::mem::zeroed();
 
     napi_create_string_utf8(
         env,
-        value.as_ptr(),
-        str_len(&value),
-        &mut local1,
+        str_ptr(&val1),
+        str_len(&val1),
+        &mut result1,
     );
 
     napi_set_named_property(
         env,
         exports,
-        key.as_ptr(),
-        local1,
+        str_ptr(&key1),
+        result1,
     );
 
-    // --- Create a function: say_hello() => string --- //
+    // --- 2. Create a function: say_hello() => string --- //
 
-    let p = CString::new("say_hello").expect("CString::new failed");
-    let mut local2: napi_value = std::mem::zeroed();
+    let str2 = CString::new("say_hello").expect("CString::new failed");
+    let mut result2: napi_value = std::mem::zeroed();
 
     napi_create_function(
         env,
-        p.as_ptr(),
-        str_len(&p),
+        str_ptr(&str2),
+        str_len(&str2),
         Some(say_hello),
         std::ptr::null_mut(),
-        &mut local2,
+        &mut result2,
     );
 
-    napi_set_named_property(env, exports, p.as_ptr(), local2);
+    napi_set_named_property(env, exports, str_ptr(&str2), result2);
 
-    // --- Create a function passing integers: add_doubles() -> double --- //
+    // --- 3. Create a function passing integers: add_doubles() -> double --- //
 
-    let p = CString::new("add_doubles").expect("CString::new failed");
-    let mut local3: napi_value = std::mem::zeroed();
+    let str3 = CString::new("add_doubles").expect("CString::new failed");
+    let mut result3: napi_value = std::mem::zeroed();
 
     napi_create_function(
         env,
-        p.as_ptr(),
-        str_len(&p),
+        str_ptr(&str3),
+        str_len(&str3),
         Some(add_doubles),
         std::ptr::null_mut(),
-        &mut local3,
+        &mut result3,
     );
 
-    napi_set_named_property(env, exports, p.as_ptr(), local3);
+    napi_set_named_property(env, exports, str_ptr(&str3), result3);
 
-    // --- Create a function passing strings--- //
+    // --- 4. Create a function passing strings--- //
 
     exports
 }
@@ -102,25 +104,26 @@ pub unsafe extern "C" fn napi_register_module_v1(
 #[no_mangle]
 pub unsafe extern "C" fn say_hello(env: napi_env, _info: napi_callback_info) -> napi_value {
 
-    let mut local: napi_value = std::mem::zeroed();
-    let result = CString::new("Hello from the kingdom of Rust!").expect("CString::new failed");
-
-    println!("lib.rs: say_hello() => {:?}", result);
+    let mut result: napi_value = std::mem::zeroed();
+    let str = CString::new("Hello from the kingdom of Rust!").expect("CString::new failed");
 
     napi_create_string_utf8(
         env,
-        result.as_ptr(),
-        str_len(&result),
-        &mut local,
+        str_ptr(&str),
+        str_len(&str),
+        &mut result,
     );
 
-    local
+    println!("lib.rs: say_hello() => {:?} ({:?})", str, result);
+
+    result
 }
 
 #[no_mangle]
 pub unsafe extern "C" fn add_doubles(env: napi_env, info: napi_callback_info) -> napi_value {
-
+    // Extract the initialized data -- this is only allowed *after* properly initializing `buffer`
     let mut buffer: [napi_value; 2] = std::mem::MaybeUninit::zeroed().assume_init();
+
     let mut argc = 2 as usize;
     let mut result: napi_value = std::mem::zeroed();
 
@@ -146,6 +149,10 @@ pub unsafe extern "C" fn add_doubles(env: napi_env, info: napi_callback_info) ->
     napi_create_double(env, value, &mut result);
 
     result
+}
+
+fn str_ptr(s: &CString) -> *const i8 {
+    s.as_ptr()
 }
 
 fn str_len(s: &CString) -> usize {
