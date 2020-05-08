@@ -1,4 +1,4 @@
 #!/usr/bin/env bash
 
-node ./index.js
+node ./index.js $1
 

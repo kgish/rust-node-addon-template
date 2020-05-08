@@ -36,6 +36,8 @@ use std::ffi::CString;
 //   napi_get_value_double: https://docs.rs/nodejs-sys/0.3.0/nodejs_sys/fn.napi_get_value_double.html
 //   napi_create_double: https://docs.rs/nodejs-sys/0.3.0/nodejs_sys/fn.napi_create_double.html
 
+// --- Register module --- //
+
 #[no_mangle]
 pub unsafe extern "C" fn napi_register_module_v1(
     env: napi_env,
@@ -101,6 +103,8 @@ pub unsafe extern "C" fn napi_register_module_v1(
     exports
 }
 
+// --- Public --- //
+
 #[no_mangle]
 pub unsafe extern "C" fn say_hello(env: napi_env, _info: napi_callback_info) -> napi_value {
 
@@ -150,6 +154,8 @@ pub unsafe extern "C" fn add_doubles(env: napi_env, info: napi_callback_info) ->
 
     result
 }
+
+// --- Private --- //
 
 fn str_ptr(s: &CString) -> *const i8 {
     s.as_ptr()
