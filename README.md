@@ -49,9 +49,9 @@ $ ./run.sh [n]
 where optional n = 1 - 5 in order to run only given example:
 
 1. Object name
-2. Function say_hello()
-3. Function add_doubles(x,y)
-4. Function send_message(str)
+2. Function sayHello()
+3. Function addNumbers(x,y)
+4. Function sendMessage(str)
 5. Promise fibonacci(n)
 
 ## From Scratch
@@ -119,6 +119,43 @@ $ ./build.sh
 $ ./run.sh
 ```
 
+## Node API bindings
+
+Here is an overview of the types, enums and functions used from [nodejs_sys](https://docs.rs/nodejs-sys/0.3.0/nodejs_sys).
+
+Types:
+  * [napi_async_work](https://docs.rs/node-api-sys/0.3.0/node_api_sys/type.napi_async_work.html)
+  * [napi_callback_info](https://docs.rs/node-api-sys/0.3.0/node_api_sys/type.napi_callback_info.html)
+  * [napi_deferred](https://docs.rs/nodejs-sys/0.3.0/nodejs_sys/type.napi_deferred.html)
+  * [napi_env](https://docs.rs/nodejs-sys/0.3.0/nodejs_sys/type.napi_env.html)
+  * [napi_value](https://docs.rs/nodejs-sys/0.3.0/nodejs_sys/type.napi_value.html)
+  
+Enum:
+  * [napi_status](https://docs.rs/nodejs-sys/0.3.0/nodejs_sys/enum.napi_status.html)
+  
+Functions:
+  * [napi_create_async_work](https://docs.rs/node-api-sys/0.3.0/node_api_sys/fn.napi_create_async_work.html)
+  * [napi_create_double](https://docs.rs/nodejs-sys/0.3.0/nodejs_sys/fn.napi_create_double.html)
+  * [napi_create_error](https://docs.rs/nodejs-sys/0.3.0/nodejs_sys/fn.napi_create_error.html)
+  * [napi_create_function](https://docs.rs/nodejs-sys/0.2.0/nodejs_sys/fn.napi_create_function.html)
+  * [napi_create_int64](https://docs.rs/nodejs-sys/0.3.0/nodejs_sys/fn.napi_create_int64.html)
+  * [napi_create_promise](https://docs.rs/nodejs-sys/0.3.0/nodejs_sys/fn.napi_create_promise.html)
+  * [napi_create_string_utf8](https://docs.rs/nodejs-sys/0.3.0/nodejs_sys/fn.napi_create_string_utf8.html)
+  * [napi_delete_async_work](https://docs.rs/nodejs-sys/0.3.0/nodejs_sys/fn.napi_delete_async_work.html)
+  * [napi_get_cb_info](https://docs.rs/nodejs-sys/0.3.0/nodejs_sys/fn.napi_get_cb_info.html)
+  * [napi_get_undefined](https://docs.rs/nodejs-sys/0.3.0/nodejs_sys/fn.napi_get_undefined.html)
+  * [napi_get_value_double](https://docs.rs/nodejs-sys/0.3.0/nodejs_sys/fn.napi_get_value_double.html)
+  * [napi_get_value_int64](https://docs.rs/nodejs-sys/0.3.0/nodejs_sys/fn.napi_get_value_int64.html)
+  * [napi_get_value_string_utf8](https://docs.rs/nodejs-sys/0.3.0/nodejs_sys/fn.napi_get_value_string_utf8.html)
+  * [napi_queue_async_work](https://docs.rs/node-api-sys/0.3.0/node_api_sys/fn.napi_queue_async_work.html)
+  * [napi_reject_deferred](https://docs.rs/nodejs-sys/0.3.0/nodejs_sys/fn.napi_reject_deferred.html)
+  * [napi_resolve_deferred](https://docs.rs/nodejs-sys/0.3.0/nodejs_sys/fn.napi_resolve_deferred.html)
+  * [napi_set_named_property](https://docs.rs/nodejs-sys/0.3.0/nodejs_sys/fn.napi_set_named_property.html)
+
+## Neon
+
+TODO.
+
 ## References
 
 Here are a few relevant links that you might find interesting.
@@ -130,3 +167,8 @@ Here are a few relevant links that you might find interesting.
 * [Rust and Node.js: A match made in heaven](https://blog.logrocket.com/rust-and-node-js-a-match-made-in-heaven/)
 * [Writing fast and safe native Node.js modules with Rust](https://blog.risingstack.com/node-js-native-modules-with-rust/)
 * [Using rust modules in JavaScript/Web Development](https://medium.com/@atulanand94/using-rust-modules-for-javascript-web-development-part-i-e6dec27df7b2)
+* [Neon](https://neon-bindings.com)
+* [An introduction to Neon](https://www.youtube.com/watch?v=yj2nD9hB3D0)
+* [Writing Node.js Modules in Rust](https://www.youtube.com/watch?v=5Cbjk8w9mEM)
+* [High Performance Apps with JavaScript and Rust, It's Easier Than You Think](https://www.youtube.com/watch?v=Pfbw4YPrwf4)
+

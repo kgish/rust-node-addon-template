@@ -34,13 +34,15 @@ use std::ffi::c_void;
 // Types:
 //   CString: https://doc.rust-lang.org/std/ffi/struct.CString.html
 
-// nodejs_sys: https://docs.rs/nodejs-sys/0.3.0/nodejs_sys/
 // Types:
-//   napi_env: https://docs.rs/nodejs-sys/0.3.0/nodejs_sys/type.napi_env.html
-//   napi_value: https://docs.rs/nodejs-sys/0.3.0/nodejs_sys/type.napi_value.html
-// Functions:
 //   napi_async_work: https://docs.rs/node-api-sys/0.3.0/node_api_sys/type.napi_async_work.html
 //   napi_callback_info: https://docs.rs/node-api-sys/0.3.0/node_api_sys/type.napi_callback_info.html
+//   napi_deferred: https://docs.rs/nodejs-sys/0.3.0/nodejs_sys/type.napi_deferred.html
+//   napi_env: https://docs.rs/nodejs-sys/0.3.0/nodejs_sys/type.napi_env.html
+//   napi_value: https://docs.rs/nodejs-sys/0.3.0/nodejs_sys/type.napi_value.html
+// Enum:
+//   napi_status: https://docs.rs/nodejs-sys/0.3.0/nodejs_sys/enum.napi_status.html
+// Functions:
 //   napi_create_async_work: https://docs.rs/node-api-sys/0.3.0/node_api_sys/fn.napi_create_async_work.html
 //   napi_create_double: https://docs.rs/nodejs-sys/0.3.0/nodejs_sys/fn.napi_create_double.html
 //   napi_create_error: https://docs.rs/nodejs-sys/0.3.0/nodejs_sys/fn.napi_create_error.html
@@ -48,7 +50,6 @@ use std::ffi::c_void;
 //   napi_create_int64: https://docs.rs/nodejs-sys/0.3.0/nodejs_sys/fn.napi_create_int64.html
 //   napi_create_promise: https://docs.rs/nodejs-sys/0.3.0/nodejs_sys/fn.napi_create_promise.html
 //   napi_create_string_utf8: https://docs.rs/nodejs-sys/0.3.0/nodejs_sys/fn.napi_create_string_utf8.html
-//   napi_deferred: https://docs.rs/nodejs-sys/0.3.0/nodejs_sys/type.napi_deferred.html
 //   napi_delete_async_work: https://docs.rs/nodejs-sys/0.3.0/nodejs_sys/fn.napi_delete_async_work.html
 //   napi_get_cb_info: https://docs.rs/nodejs-sys/0.3.0/nodejs_sys/fn.napi_get_cb_info.html
 //   napi_get_undefined: https://docs.rs/nodejs-sys/0.3.0/nodejs_sys/fn.napi_get_undefined.html
@@ -59,7 +60,7 @@ use std::ffi::c_void;
 //   napi_reject_deferred: https://docs.rs/nodejs-sys/0.3.0/nodejs_sys/fn.napi_reject_deferred.html
 //   napi_resolve_deferred: https://docs.rs/nodejs-sys/0.3.0/nodejs_sys/fn.napi_resolve_deferred.html
 //   napi_set_named_property: https://docs.rs/nodejs-sys/0.3.0/nodejs_sys/fn.napi_set_named_property.html
-//   napi_status: https://docs.rs/nodejs-sys/0.3.0/nodejs_sys/enum.napi_status.html
+
 
 // --- Register module --- //
 
