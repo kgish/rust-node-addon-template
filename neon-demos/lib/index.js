@@ -8,8 +8,8 @@ console.log(`index.js: addon = '${JSON.stringify(addon)}'`);
 console.log(`n = ${n}`);
 
 if (n === 0 || n === 1) {
-  console.log(`index.js: convertStructToJsObject = '${addon.convertStructToJsObject}'`);
-  console.log(`index.js: convertStructToJsObject() => '${JSON.stringify(addon.convertStructToJsObject())}'`);
+  console.log(`index.js: getUser = '${addon.getUser}'`);
+  console.log(`index.js: getUser() => '${JSON.stringify(addon.getUser())}'`);
 }
 
 if (n === 0 || n === 2) {
