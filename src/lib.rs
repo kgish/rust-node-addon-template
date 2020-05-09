@@ -39,16 +39,25 @@ use std::ffi::c_void;
 //   napi_env: https://docs.rs/nodejs-sys/0.3.0/nodejs_sys/type.napi_env.html
 //   napi_value: https://docs.rs/nodejs-sys/0.3.0/nodejs_sys/type.napi_value.html
 // Functions:
+//   napi_async_work: https://docs.rs/node-api-sys/0.3.0/node_api_sys/type.napi_async_work.html
+//   napi_callback_info: https://docs.rs/node-api-sys/0.3.0/node_api_sys/type.napi_callback_info.html
+//   napi_create_async_work: https://docs.rs/node-api-sys/0.3.0/node_api_sys/fn.napi_create_async_work.html
 //   napi_create_double: https://docs.rs/nodejs-sys/0.3.0/nodejs_sys/fn.napi_create_double.html
 //   napi_create_error: https://docs.rs/nodejs-sys/0.3.0/nodejs_sys/fn.napi_create_error.html
 //   napi_create_function: https://docs.rs/nodejs-sys/0.2.0/nodejs_sys/fn.napi_create_function.html
 //   napi_create_int64: https://docs.rs/nodejs-sys/0.3.0/nodejs_sys/fn.napi_create_int64.html
+//   napi_create_promise: https://docs.rs/nodejs-sys/0.3.0/nodejs_sys/fn.napi_create_promise.html
 //   napi_create_string_utf8: https://docs.rs/nodejs-sys/0.3.0/nodejs_sys/fn.napi_create_string_utf8.html
+//   napi_deferred: https://docs.rs/nodejs-sys/0.3.0/nodejs_sys/type.napi_deferred.html
+//   napi_delete_async_work: https://docs.rs/nodejs-sys/0.3.0/nodejs_sys/fn.napi_delete_async_work.html
 //   napi_get_cb_info: https://docs.rs/nodejs-sys/0.3.0/nodejs_sys/fn.napi_get_cb_info.html
 //   napi_get_undefined: https://docs.rs/nodejs-sys/0.3.0/nodejs_sys/fn.napi_get_undefined.html
 //   napi_get_value_double: https://docs.rs/nodejs-sys/0.3.0/nodejs_sys/fn.napi_get_value_double.html
 //   napi_get_value_int64: https://docs.rs/nodejs-sys/0.3.0/nodejs_sys/fn.napi_get_value_int64.html
 //   napi_get_value_string_utf8: https://docs.rs/nodejs-sys/0.3.0/nodejs_sys/fn.napi_get_value_string_utf8.html
+//   napi_queue_async_work: https://docs.rs/node-api-sys/0.3.0/node_api_sys/fn.napi_queue_async_work.html
+//   napi_reject_deferred: https://docs.rs/nodejs-sys/0.3.0/nodejs_sys/fn.napi_reject_deferred.html
+//   napi_resolve_deferred: https://docs.rs/nodejs-sys/0.3.0/nodejs_sys/fn.napi_resolve_deferred.html
 //   napi_set_named_property: https://docs.rs/nodejs-sys/0.3.0/nodejs_sys/fn.napi_set_named_property.html
 //   napi_status: https://docs.rs/nodejs-sys/0.3.0/nodejs_sys/enum.napi_status.html
 
@@ -87,7 +96,7 @@ pub unsafe extern "C" fn napi_register_module_v1(
 
     napi_set_named_property(env, exports, str_ptr(&str2), result2);
 
-    // --- 3. Create a function passing numbers addNumbers() -> double --- //
+    // --- 3. Create a function passing numbers addNumbers() -> number --- //
 
     let str3 = CString::new("addNumbers").expect("CString::new failed");
     let mut result3: napi_value = std::mem::zeroed();
@@ -119,7 +128,7 @@ pub unsafe extern "C" fn napi_register_module_v1(
 
     napi_set_named_property(env, exports, str_ptr(&str4), result4);
 
-    // --- 5. Create an async function fibonacci(n) -> u64 --- //
+    // --- 5. Create an async function fibonacci(n) -> number --- //
 
     let str5 = CString::new("fibonacci").expect("CString::new failed");
     let mut result5: napi_value = std::mem::zeroed();
@@ -314,7 +323,7 @@ pub unsafe extern "C" fn complete(env: napi_env, _status: napi_status, data: *mu
             Ok(result) => {
                 println!("lib.rs: complete() result='{:?}'", result);
                 result
-            },
+            }
             Err(_) => {
                 let mut js_error: napi_value = std::mem::zeroed();
                 napi_create_error(
