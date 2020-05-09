@@ -71,9 +71,9 @@ pub unsafe extern "C" fn napi_register_module_v1(
 
     napi_set_named_property(env, exports, str_ptr(&key1), result1);
 
-    // --- 2. Create a function: say_hello() => string --- //
+    // --- 2. Create a function: sayHello() => string --- //
 
-    let str2 = CString::new("say_hello").expect("CString::new failed");
+    let str2 = CString::new("sayHello").expect("CString::new failed");
     let mut result2: napi_value = std::mem::zeroed();
 
     napi_create_function(
@@ -87,25 +87,25 @@ pub unsafe extern "C" fn napi_register_module_v1(
 
     napi_set_named_property(env, exports, str_ptr(&str2), result2);
 
-    // --- 3. Create a function passing doubles: add_doubles() -> double --- //
+    // --- 3. Create a function passing numbers addNumbers() -> double --- //
 
-    let str3 = CString::new("add_doubles").expect("CString::new failed");
+    let str3 = CString::new("addNumbers").expect("CString::new failed");
     let mut result3: napi_value = std::mem::zeroed();
 
     napi_create_function(
         env,
         str_ptr(&str3),
         str_len(&str3),
-        Some(add_doubles),
+        Some(add_numbers),
         std::ptr::null_mut(),
         &mut result3,
     );
 
     napi_set_named_property(env, exports, str_ptr(&str3), result3);
 
-    // --- 4. Create a function passing string: send_message(message) -> () --- //
+    // --- 4. Create a function passing string: sendMessage(message) -> () --- //
 
-    let str4 = CString::new("send_message").expect("CString::new failed");
+    let str4 = CString::new("sendMessage").expect("CString::new failed");
     let mut result4: napi_value = std::mem::zeroed();
 
     napi_create_function(
@@ -151,7 +151,7 @@ pub unsafe extern "C" fn say_hello(env: napi_env, _info: napi_callback_info) -> 
     result
 }
 
-pub unsafe extern "C" fn add_doubles(env: napi_env, info: napi_callback_info) -> napi_value {
+pub unsafe extern "C" fn add_numbers(env: napi_env, info: napi_callback_info) -> napi_value {
     // Extract the initialized data -- this is only allowed *after* properly initializing `buffer`
     let mut buffer: [napi_value; 2] = std::mem::MaybeUninit::zeroed().assume_init();
 

@@ -1,8 +1,7 @@
 {
-  "extends": "bliss",
+  "extends": "standard",
   "rules": {
-    "flowtype-errors/show-errors": "off",
     "no-console": "off",
-    "no-new": "off"
+    "semi": "off"
   }
 }
