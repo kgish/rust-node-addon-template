@@ -61,7 +61,6 @@ use std::ffi::c_void;
 //   napi_resolve_deferred: https://docs.rs/nodejs-sys/0.3.0/nodejs_sys/fn.napi_resolve_deferred.html
 //   napi_set_named_property: https://docs.rs/nodejs-sys/0.3.0/nodejs_sys/fn.napi_set_named_property.html
 
-
 // --- Register module --- //
 
 #[no_mangle]
@@ -71,17 +70,7 @@ pub unsafe extern "C" fn napi_register_module_v1(
 ) -> nodejs_sys::napi_value {
     println!("lib.rs: napi_register_module_v1()");
 
-    // --- 1. Create an object -> { key: value } --- //
-
-    let key1 = CString::new("name").expect("CString::new failed");
-    let val1 = CString::new("Kiffin Gish").expect("CString::new failed");
-    let mut result1: napi_value = std::mem::zeroed();
-
-    napi_create_string_utf8(env, str_ptr(&val1), str_len(&val1), &mut result1);
-
-    napi_set_named_property(env, exports, str_ptr(&key1), result1);
-
-    // --- 2. Create a function: sayHello() => string --- //
+    // --- 1. Create a function: sayHello() => string --- //
 
     let str2 = CString::new("sayHello").expect("CString::new failed");
     let mut result2: napi_value = std::mem::zeroed();
@@ -97,7 +86,7 @@ pub unsafe extern "C" fn napi_register_module_v1(
 
     napi_set_named_property(env, exports, str_ptr(&str2), result2);
 
-    // --- 3. Create a function passing numbers addNumbers() -> number --- //
+    // --- 2. Create a function passing numbers addNumbers() -> number --- //
 
     let str3 = CString::new("addNumbers").expect("CString::new failed");
     let mut result3: napi_value = std::mem::zeroed();
@@ -113,7 +102,7 @@ pub unsafe extern "C" fn napi_register_module_v1(
 
     napi_set_named_property(env, exports, str_ptr(&str3), result3);
 
-    // --- 4. Create a function passing string: sendMessage(message) -> () --- //
+    // --- 3. Create a function passing string: sendMessage(message) -> () --- //
 
     let str4 = CString::new("sendMessage").expect("CString::new failed");
     let mut result4: napi_value = std::mem::zeroed();
@@ -129,7 +118,7 @@ pub unsafe extern "C" fn napi_register_module_v1(
 
     napi_set_named_property(env, exports, str_ptr(&str4), result4);
 
-    // --- 5. Create an async function fibonacci(n) -> number --- //
+    // --- 4. Create an async function fibonacci(n) -> number --- //
 
     let str5 = CString::new("fibonacci").expect("CString::new failed");
     let mut result5: napi_value = std::mem::zeroed();

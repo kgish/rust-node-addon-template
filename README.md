@@ -46,13 +46,12 @@ $ ./build.sh
 $ ./run.sh [n]
 ```
 
-where optional n = 1 - 5 in order to run only given example:
+where optional n = 1 - 4 in order to run only given example:
 
-1. Object name
-2. Function sayHello()
-3. Function addNumbers(x,y)
-4. Function sendMessage(str)
-5. Promise fibonacci(n)
+1. Function sayHello()
+2. Function addNumbers(x,y)
+3. Function sendMessage(str)
+4. Promise fibonacci(n)
 
 ## From Scratch
 
