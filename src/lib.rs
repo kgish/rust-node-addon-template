@@ -287,16 +287,10 @@ pub unsafe extern "C" fn fibonacci(env: napi_env, info: napi_callback_info) -> n
 
 pub unsafe extern "C" fn perform(_env: napi_env, data: *mut c_void) {
     let mut t: Box<Data> = Box::from_raw(std::mem::transmute(data));
-    let mut last = 1;
-    let mut second_last = 0;
 
-    for _ in 2..t.val {
-        let temp = last;
-        last = last + second_last;
-        second_last = temp;
-    }
+    let n = fib(t.val);
 
-    t.result = Some(Ok(last));
+    t.result = Some(Ok(n));
 
     println!(
         "lib.rs: perform() val='{:?}' result='{:?}'",
@@ -341,7 +335,14 @@ pub unsafe extern "C" fn complete(env: napi_env, _status: napi_status, data: *mu
         }
     };
     let mut obj: napi_value = std::mem::zeroed();
+
+    // TODO:
+    // Note that for Node v12.16.3 Number.MAX_SAFE_INTEGER 9007199254740991. Here we are
+    // coercing a Rust u64 value to an i64 which could result in overflow. Currently there
+    // is no nodejs-sys implementation for napi_bigint_uint64.
+    // See: https://nodejs.org/api/n-api.html#n_api_napi_create_bigint_uint64
     napi_create_int64(env, v as i64, &mut obj);
+
     napi_resolve_deferred(env, t.deferred, obj);
 
     napi_delete_async_work(env, t.work);
@@ -355,4 +356,18 @@ fn str_ptr(s: &CString) -> *const i8 {
 
 fn str_len(s: &CString) -> usize {
     s.as_bytes().len()
+}
+
+fn fib(n: u64) -> u64 {
+    let mut result = 1;
+    let mut previous = 0;
+
+    for _ in 2..n {
+        let temp = result;
+        result = result + previous;
+        previous = temp;
+    }
+
+    println!("lib.rs: fib({:?}) result='{:?}'", n, result);
+    result
 }
