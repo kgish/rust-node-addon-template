@@ -2,6 +2,10 @@
 
 A simple Rust Node addon example template using N-API
 
+## Introduction
+
+This is part of the presentation that I gave at a recent [Berlin Rust Meetup](https://www.meetup.com/Rust-Berlin/).
+
 ## Requirements
 
 For this project template, the following is required:
@@ -46,12 +50,13 @@ $ ./build.sh
 $ ./run.sh [n]
 ```
 
-where optional n = 1 - 4 in order to run only given example:
+where optional n = 1 - 5 in order to run only given example:
 
-1. Function sayHello()
-2. Function addNumbers(x,y)
-3. Function sendMessage(str)
-4. Promise fibonacci(n)
+1. Function sayHello() => void
+2. Function sendMessage(str) => void
+3. Function addNumbers(x,y) => number
+4. Function getUser() => user
+5. Promise fibonacci(n)
 
 ## From Scratch
 
@@ -138,8 +143,10 @@ Functions:
   * [napi_create_error](https://docs.rs/nodejs-sys/0.3.0/nodejs_sys/fn.napi_create_error.html)
   * [napi_create_function](https://docs.rs/nodejs-sys/0.2.0/nodejs_sys/fn.napi_create_function.html)
   * [napi_create_int64](https://docs.rs/nodejs-sys/0.3.0/nodejs_sys/fn.napi_create_int64.html)
+  * [napi_create_object](https://docs.rs/nodejs-sys/0.3.0/nodejs_sys/fn.napi_create_object.html)
   * [napi_create_promise](https://docs.rs/nodejs-sys/0.3.0/nodejs_sys/fn.napi_create_promise.html)
   * [napi_create_string_utf8](https://docs.rs/nodejs-sys/0.3.0/nodejs_sys/fn.napi_create_string_utf8.html)
+  * [napi_create_uint32](https://docs.rs/nodejs-sys/0.3.0/nodejs_sys/fn.napi_create_uint32.html)
   * [napi_delete_async_work](https://docs.rs/nodejs-sys/0.3.0/nodejs_sys/fn.napi_delete_async_work.html)
   * [napi_get_cb_info](https://docs.rs/nodejs-sys/0.3.0/nodejs_sys/fn.napi_get_cb_info.html)
   * [napi_get_undefined](https://docs.rs/nodejs-sys/0.3.0/nodejs_sys/fn.napi_get_undefined.html)

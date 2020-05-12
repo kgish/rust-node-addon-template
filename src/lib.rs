@@ -1,11 +1,11 @@
 // Raw bindings to the Node.js API
 use nodejs_sys::{
     napi_async_work, napi_callback_info, napi_create_async_work, napi_create_double,
-    napi_create_error, napi_create_function, napi_create_int64, napi_create_promise,
-    napi_create_string_utf8, napi_deferred, napi_delete_async_work, napi_env, napi_get_cb_info,
-    napi_get_undefined, napi_get_value_double, napi_get_value_int64, napi_get_value_string_utf8,
-    napi_queue_async_work, napi_reject_deferred, napi_resolve_deferred, napi_set_named_property,
-    napi_status, napi_value,
+    napi_create_error, napi_create_function, napi_create_int64, napi_create_object,
+    napi_create_promise, napi_create_string_utf8, napi_create_uint32, napi_deferred,
+    napi_delete_async_work, napi_env, napi_get_cb_info, napi_get_undefined, napi_get_value_double,
+    napi_get_value_int64, napi_get_value_string_utf8, napi_queue_async_work, napi_reject_deferred,
+    napi_resolve_deferred, napi_set_named_property, napi_status, napi_value,
 };
 
 // FFI bindings
@@ -48,8 +48,10 @@ use std::ffi::c_void;
 //   napi_create_error: https://docs.rs/nodejs-sys/0.3.0/nodejs_sys/fn.napi_create_error.html
 //   napi_create_function: https://docs.rs/nodejs-sys/0.2.0/nodejs_sys/fn.napi_create_function.html
 //   napi_create_int64: https://docs.rs/nodejs-sys/0.3.0/nodejs_sys/fn.napi_create_int64.html
+//   napi_create_object: https://docs.rs/nodejs-sys/0.3.0/nodejs_sys/fn.napi_create_object.html
 //   napi_create_promise: https://docs.rs/nodejs-sys/0.3.0/nodejs_sys/fn.napi_create_promise.html
 //   napi_create_string_utf8: https://docs.rs/nodejs-sys/0.3.0/nodejs_sys/fn.napi_create_string_utf8.html
+//   napi_create_uint32: https://docs.rs/nodejs-sys/0.3.0/nodejs_sys/fn.napi_create_uint32.html
 //   napi_delete_async_work: https://docs.rs/nodejs-sys/0.3.0/nodejs_sys/fn.napi_delete_async_work.html
 //   napi_get_cb_info: https://docs.rs/nodejs-sys/0.3.0/nodejs_sys/fn.napi_get_cb_info.html
 //   napi_get_undefined: https://docs.rs/nodejs-sys/0.3.0/nodejs_sys/fn.napi_get_undefined.html
@@ -70,23 +72,39 @@ pub unsafe extern "C" fn napi_register_module_v1(
 ) -> nodejs_sys::napi_value {
     println!("lib.rs: napi_register_module_v1()");
 
-    // --- 1. Create a function: sayHello() => string --- //
+    // --- 1. Create a function that returns a string: sayHello() => string --- //
 
-    let str2 = CString::new("sayHello").expect("CString::new failed");
+    let str1 = CString::new("sayHello").expect("CString::new failed");
+    let mut result1: napi_value = std::mem::zeroed();
+
+    napi_create_function(
+        env,
+        str_ptr(&str1),
+        str_len(&str1),
+        Some(say_hello),
+        std::ptr::null_mut(),
+        &mut result1,
+    );
+
+    napi_set_named_property(env, exports, str_ptr(&str1), result1);
+
+    // --- 2. Create a function passing in a string: sendMessage(string) -> () --- //
+
+    let str2 = CString::new("sendMessage").expect("CString::new failed");
     let mut result2: napi_value = std::mem::zeroed();
 
     napi_create_function(
         env,
         str_ptr(&str2),
         str_len(&str2),
-        Some(say_hello),
+        Some(send_message),
         std::ptr::null_mut(),
         &mut result2,
     );
 
     napi_set_named_property(env, exports, str_ptr(&str2), result2);
 
-    // --- 2. Create a function passing numbers addNumbers() -> number --- //
+    // --- 3. Create a function passing numbers addNumbers(x,y) -> number --- //
 
     let str3 = CString::new("addNumbers").expect("CString::new failed");
     let mut result3: napi_value = std::mem::zeroed();
@@ -102,23 +120,30 @@ pub unsafe extern "C" fn napi_register_module_v1(
 
     napi_set_named_property(env, exports, str_ptr(&str3), result3);
 
-    // --- 3. Create a function passing string: sendMessage(message) -> () --- //
+    // --- 4. Create a function that returns an object getUser() -> object --- //
+    {
+        let key = CString::new("name").expect("CString::new failed");
+        let mut local: napi_value = std::mem::zeroed();
+        let value = CString::new("Kiffin").expect("CString::new failed");
+        napi_create_string_utf8(env, str_ptr(&value), str_len(&value), &mut local);
+        napi_set_named_property(env, exports, str_ptr(&key), local);
+    }
 
-    let str4 = CString::new("sendMessage").expect("CString::new failed");
+    let str4 = CString::new("getUser").expect("CString::new failed");
     let mut result4: napi_value = std::mem::zeroed();
 
     napi_create_function(
         env,
         str_ptr(&str4),
         str_len(&str4),
-        Some(send_message),
+        Some(get_user),
         std::ptr::null_mut(),
         &mut result4,
     );
 
     napi_set_named_property(env, exports, str_ptr(&str4), result4);
 
-    // --- 4. Create an async function fibonacci(n) -> number --- //
+    // --- 5. Create an async function fibonacci(n) -> number --- //
 
     let str5 = CString::new("fibonacci").expect("CString::new failed");
     let mut result5: napi_value = std::mem::zeroed();
@@ -146,37 +171,6 @@ pub unsafe extern "C" fn say_hello(env: napi_env, _info: napi_callback_info) -> 
     napi_create_string_utf8(env, str_ptr(&str), str_len(&str), &mut result);
 
     println!("lib.rs: say_hello() => {:?} ({:?})", str, result);
-
-    result
-}
-
-pub unsafe extern "C" fn add_numbers(env: napi_env, info: napi_callback_info) -> napi_value {
-    // Extract the initialized data -- this is only allowed *after* properly initializing `buffer`
-    let mut buffer: [napi_value; 2] = std::mem::MaybeUninit::zeroed().assume_init();
-
-    let mut argc = 2 as usize;
-    let mut result: napi_value = std::mem::zeroed();
-
-    napi_get_cb_info(
-        env,
-        info,
-        &mut argc,
-        buffer.as_mut_ptr(),
-        std::ptr::null_mut(),
-        std::ptr::null_mut(),
-    );
-
-    let mut x = 0 as f64;
-    let mut y = 0 as f64;
-
-    napi_get_value_double(env, buffer[0], &mut x);
-    napi_get_value_double(env, buffer[1], &mut y);
-
-    let value = x + y;
-
-    println!("lib.rs: add_doubles({},{}) => {:?}", x, y, value);
-
-    napi_create_double(env, value, &mut result);
 
     result
 }
@@ -215,6 +209,64 @@ pub unsafe extern "C" fn send_message(env: napi_env, info: napi_callback_info) -
     napi_get_undefined(env, &mut und);
 
     und
+}
+
+pub unsafe extern "C" fn add_numbers(env: napi_env, info: napi_callback_info) -> napi_value {
+    // Extract the initialized data -- this is only allowed *after* properly initializing `buffer`
+    let mut buffer: [napi_value; 2] = std::mem::MaybeUninit::zeroed().assume_init();
+
+    let mut argc = 2 as usize;
+    let mut result: napi_value = std::mem::zeroed();
+
+    napi_get_cb_info(
+        env,
+        info,
+        &mut argc,
+        buffer.as_mut_ptr(),
+        std::ptr::null_mut(),
+        std::ptr::null_mut(),
+    );
+
+    let mut x = 0 as f64;
+    let mut y = 0 as f64;
+
+    napi_get_value_double(env, buffer[0], &mut x);
+    napi_get_value_double(env, buffer[1], &mut y);
+
+    let value = x + y;
+
+    println!("lib.rs: add_doubles({},{}) => {:?}", x, y, value);
+
+    napi_create_double(env, value, &mut result);
+
+    result
+}
+
+// TODO
+pub unsafe extern "C" fn get_user(env: napi_env, _info: napi_callback_info) -> napi_value {
+    let mut result: napi_value = std::mem::zeroed();
+    // let mut key_name: napi_value = std::mem::zeroed();
+    // let mut val_name: napi_value = std::mem::zeroed();
+    // let mut key_age: napi_value = std::mem::zeroed();
+    let mut val_age: napi_value = std::mem::zeroed();
+    // let cstr_key_name = CString::new("name").expect("CString::new failed");
+    // let cstr_val_name = CString::new("Kiffin").expect("CString::new failed");
+    // let cstr_key_age = CString::new("age").expect("CString::new failed");
+
+    napi_create_object(env, &mut result);
+
+    // napi_create_string_utf8(env, str_ptr(&cstr_key_name), str_len(&cstr_key_name), &mut key_name);
+    // napi_create_string_utf8(env, str_ptr(&cstr_val_name), str_len(&cstr_val_name), &mut val_name);
+    // napi_create_string_utf8(env, str_ptr(&cstr_key_age), str_len(&cstr_key_age), &mut key_age);
+    //
+    napi_create_uint32(env, 36 as u32, &mut val_age);
+    //
+    // (*result).set(key_name, val_name);
+    // (*result).set(key_age, val_age);
+
+    println!("lib.rs: get_user() => ({:?})", result);
+
+    result
 }
 
 #[derive(Debug, Clone)]
@@ -371,3 +423,10 @@ fn fib(n: u64) -> u64 {
     println!("lib.rs: fib({:?}) result='{:?}'", n, result);
     result
 }
+
+// fn fib(n: i64) -> i64 {
+//   return match n {
+//     1 | 2 => 1,
+//     _ => fib(n - 1) + fib(n - 2)
+//   }
+// }

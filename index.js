@@ -12,17 +12,23 @@ if (n === 0 || n === 1) {
 }
 
 if (n === 0 || n === 2) {
-  console.log(`index.js: addNumbers = '${addon.addNumbers}'`);
-  console.log(`index.js: addNumbers(3.1,4.3) => '${addon.addNumbers(3.1, 4.3)}'`);
-}
-
-if (n === 0 || n === 3) {
   const message = 'This is a message from the javascript world!';
   console.log(`index.js: sendMessage = '${addon.sendMessage}'`);
   console.log(`index.js: sendMessage('${message}') => '${addon.sendMessage(message)}'`);
 }
 
+if (n === 0 || n === 3) {
+  console.log(`index.js: addNumbers = '${addon.addNumbers}'`);
+  console.log(`index.js: addNumbers(3.1,4.3) => '${addon.addNumbers(3.1, 4.3)}'`);
+}
+
 if (n === 0 || n === 4) {
+  // TODO
+  console.log(`index.js: getUser = '${addon.getUser}'`);
+  console.log(`index.js: getUser() => '${JSON.stringify(addon.getUser())}'`);
+}
+
+if (n === 0 || n === 5) {
   console.log(`index.js: fibonacci = '${addon.fibonacci}'`);
   const x = 80;
   addon.fibonacci(x).then(

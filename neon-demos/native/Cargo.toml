@@ -13,3 +13,7 @@ neon-build = "0.3.3"
 
 [dependencies]
 neon = "0.3.3"
+num-bigint = "0.2"
+num-traits = "0.2"
+
+

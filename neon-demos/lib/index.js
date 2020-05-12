@@ -29,11 +29,15 @@ if (n === 0 || n === 1) {
 
 if (n === 0 || n === 5) {
   console.log(`index.js: fibonacci = '${addon.fibonacci}'`);
-  // const x = 80;
-  // addon.fibonacci(x).then(
-  //   result => console.log(`index.js: fibonacci(${x}) => OK '${result}'`),
-  //   error => console.log(`index.js: fibonacci(${x}) => NOK '${error}'`)
-  // ).catch(
-  //   error => console.log(`index.js: fibonacci(${x}) => NOK '${error}'`)
-  // );
+  const x = 100000;
+  addon.fibonacci(x, (err, result) => {
+    if (err) {
+      console.log(`index.js: fibonacci(${x}) => NOK '${err}'`)
+    } else {
+      console.log(`index.js: fibonacci(${x}) => OK '${result}'`);
+    }
+  });
+
+  console.log(`computing fibonacci(${x}) in background thread...`);
+  console.log('main thread is still responsive!');
 }
