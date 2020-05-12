@@ -1,26 +1,26 @@
 use neon::prelude::*;
 use neon::register_module;
 
-// --- say_hello --- //
+// --- 1. say_hello() => string --- //
 fn say_hello(mut cx: FunctionContext) -> JsResult<JsString> {
     Ok(cx.string("Hello from the kingdom of Rust!"))
 }
 
-// --- add_numbers --- //
-fn add_numbers(mut cx: FunctionContext) -> JsResult<JsNumber> {
-    let x = cx.argument::<JsNumber>(0)?.value();
-    let y = cx.argument::<JsNumber>(1)?.value();
-    Ok(cx.number(x + y))
-}
-
-// --- send_message --- //
+// --- 2. send_message(msg) => () --- //
 fn send_message(mut cx: FunctionContext) -> JsResult<JsNull> {
     let s = cx.argument::<JsString>(0)?.value();
     println!("lib.rs: send_message({})", s);
     Ok(cx.null())
 }
 
-// --- get_user --- //
+// --- 3. add_numbers(x,y) => number --- //
+fn add_numbers(mut cx: FunctionContext) -> JsResult<JsNumber> {
+    let x = cx.argument::<JsNumber>(0)?.value();
+    let y = cx.argument::<JsNumber>(1)?.value();
+    Ok(cx.number(x + y))
+}
+
+// --- 4. get_user() => user --- //
 fn get_user(mut cx: FunctionContext) -> JsResult<JsObject> {
     struct User { pub name: String, pub age: u8, }
 
@@ -33,6 +33,8 @@ fn get_user(mut cx: FunctionContext) -> JsResult<JsObject> {
     object.set(&mut cx, "age", age).unwrap();
     Ok(object)
 }
+
+// --- 5. fibonacci(n) => number --- //
 
 // --- Register and export all functions --- //
 register_module!(mut m, {
