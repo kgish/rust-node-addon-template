@@ -1,3 +1,5 @@
+mod examples;
+
 use nodejs_sys::{
     napi_async_work, napi_callback_info, napi_create_async_work, napi_create_double,
     napi_create_error, napi_create_function, napi_create_int64, napi_create_object,
@@ -20,7 +22,7 @@ pub unsafe extern "C" fn napi_register_module_v1(
 ) -> nodejs_sys::napi_value {
     println!("lib.rs: napi_register_module_v1()");
 
-    create_function(env, exports, "sayHello", say_hello);
+    create_function(env, exports, "sayHello", examples::say_hello::run);
     create_function(env, exports, "sendMessage", send_message);
     create_function(env, exports, "addNumbers", add_numbers);
     create_function(env, exports, "getUser", get_user);
@@ -30,17 +32,6 @@ pub unsafe extern "C" fn napi_register_module_v1(
 }
 
 // --- Public --- //
-
-pub unsafe extern "C" fn say_hello(env: napi_env, _info: napi_callback_info) -> napi_value {
-    let mut result: napi_value = std::mem::zeroed();
-    let str = CString::new("Hello from the kingdom of Rust!").expect("CString::new failed");
-
-    napi_create_string_utf8(env, str_ptr(&str), str_len(&str), &mut result);
-
-    println!("lib.rs: say_hello() => {:?} ({:?})", str, result);
-
-    result
-}
 
 pub unsafe extern "C" fn send_message(env: napi_env, info: napi_callback_info) -> napi_value {
     // Extract the initialized data -- this is only allowed *after* properly initializing `buffer`
