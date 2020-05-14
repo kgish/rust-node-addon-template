@@ -56,7 +56,7 @@ where optional n = 1 - 5 in order to run only given example:
 2. Function sendMessage(str) => void
 3. Function addNumbers(x,y) => number
 4. Function getUser() => user
-5. Promise fibonacci(n)
+5. Promise fibonacci(n) => number
 
 ## From Scratch
 
@@ -123,7 +123,35 @@ $ ./build.sh
 $ ./run.sh
 ```
 
-## Node API bindings
+## FFI bindings
+
+`std::ffi::CString` - A type representing an owned, C-compatible, nul-terminated string with no
+nul bytes in the middle.
+This type serves the purpose of being able to safely generate a C-compatible string from a Rust
+byte slice or vector. An instance of this type is a static guarantee that the underlying bytes
+contain no interior 0 bytes ("nul characters") and that the final byte is 0 ("nul terminator").
+See: https://doc.rust-lang.org/std/ffi/struct.CString.html
+
+std::ffi::c_void - Equivalent to C's void type when used as a pointer.
+In essence, *const c_void is equivalent to C's const void* and *mut c_void is equivalent to
+C's void*. That said, this is not the same as C's void return type, which is Rust's () type.
+See: https://doc.rust-lang.org/std/ffi/enum.c_void.html
+
+## No mangle
+
+The `#[no_mangle]` attribute turns off Rust’s name mangling, so that it is easier to link to. The Rust compiler 
+mangles symbol names differently than native code linkers expect and therefore needs to be told NOT to mangle any 
+functions exported to the outside world.
+
+### extern "C"
+
+By default, any function you write in Rust will use the Rust ABI. Instead, when building outwards facing FFI APIs we 
+need to tell the compiler to use the system ABI.
+
+See the chapter [Unsafe Rust](https://doc.rust-lang.org/book/ch19-01-unsafe-rust.html)
+in the Rust Book.
+
+## Raw bindings to the Node.js API
 
 Here is an overview of the types, enums and functions used from [nodejs_sys](https://docs.rs/nodejs-sys/0.3.0/nodejs_sys).
 

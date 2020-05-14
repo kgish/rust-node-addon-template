@@ -1,4 +1,3 @@
-// Raw bindings to the Node.js API
 use nodejs_sys::{
     napi_async_work, napi_callback_info, napi_create_async_work, napi_create_double,
     napi_create_error, napi_create_function, napi_create_int64, napi_create_object,
@@ -9,59 +8,8 @@ use nodejs_sys::{
 };
 
 // FFI bindings
-
-// std::ffi::CString - A type representing an owned, C-compatible, nul-terminated string with no
-// nul bytes in the middle.
-// This type serves the purpose of being able to safely generate a C-compatible string from a Rust
-// byte slice or vector. An instance of this type is a static guarantee that the underlying bytes
-// contain no interior 0 bytes ("nul characters") and that the final byte is 0 ("nul terminator").
-// See: https://doc.rust-lang.org/std/ffi/struct.CString.html
-use std::ffi::CString;
-
-// std::ffi::c_void - Equivalent to C's void type when used as a pointer.
-// In essence, *const c_void is equivalent to C's const void* and *mut c_void is equivalent to
-// C's void*. That said, this is not the same as C's void return type, which is Rust's () type.
-// See: https://doc.rust-lang.org/std/ffi/enum.c_void.html
 use std::ffi::c_void;
-
-// #[no_mangle] : The Rust compiler mangles symbol names differently than native code linkers
-// expect and therefore needs to be told NOT to mangle any functions exported to the outside world.
-//
-// extern "C" : By default, any function you write in Rust will use the Rust ABI. Instead, when
-// building outwards facing FFI APIs we need to tell the compiler to use the system ABI.
-
-// std::ffi: https://doc.rust-lang.org/std/ffi/index.html
-// Types:
-//   CString: https://doc.rust-lang.org/std/ffi/struct.CString.html
-
-// Types:
-//   napi_async_work: https://docs.rs/node-api-sys/0.3.0/node_api_sys/type.napi_async_work.html
-//   napi_callback_info: https://docs.rs/node-api-sys/0.3.0/node_api_sys/type.napi_callback_info.html
-//   napi_deferred: https://docs.rs/nodejs-sys/0.3.0/nodejs_sys/type.napi_deferred.html
-//   napi_env: https://docs.rs/nodejs-sys/0.3.0/nodejs_sys/type.napi_env.html
-//   napi_value: https://docs.rs/nodejs-sys/0.3.0/nodejs_sys/type.napi_value.html
-// Enum:
-//   napi_status: https://docs.rs/nodejs-sys/0.3.0/nodejs_sys/enum.napi_status.html
-// Functions:
-//   napi_create_async_work: https://docs.rs/node-api-sys/0.3.0/node_api_sys/fn.napi_create_async_work.html
-//   napi_create_double: https://docs.rs/nodejs-sys/0.3.0/nodejs_sys/fn.napi_create_double.html
-//   napi_create_error: https://docs.rs/nodejs-sys/0.3.0/nodejs_sys/fn.napi_create_error.html
-//   napi_create_function: https://docs.rs/nodejs-sys/0.2.0/nodejs_sys/fn.napi_create_function.html
-//   napi_create_int64: https://docs.rs/nodejs-sys/0.3.0/nodejs_sys/fn.napi_create_int64.html
-//   napi_create_object: https://docs.rs/nodejs-sys/0.3.0/nodejs_sys/fn.napi_create_object.html
-//   napi_create_promise: https://docs.rs/nodejs-sys/0.3.0/nodejs_sys/fn.napi_create_promise.html
-//   napi_create_string_utf8: https://docs.rs/nodejs-sys/0.3.0/nodejs_sys/fn.napi_create_string_utf8.html
-//   napi_create_uint32: https://docs.rs/nodejs-sys/0.3.0/nodejs_sys/fn.napi_create_uint32.html
-//   napi_delete_async_work: https://docs.rs/nodejs-sys/0.3.0/nodejs_sys/fn.napi_delete_async_work.html
-//   napi_get_cb_info: https://docs.rs/nodejs-sys/0.3.0/nodejs_sys/fn.napi_get_cb_info.html
-//   napi_get_undefined: https://docs.rs/nodejs-sys/0.3.0/nodejs_sys/fn.napi_get_undefined.html
-//   napi_get_value_double: https://docs.rs/nodejs-sys/0.3.0/nodejs_sys/fn.napi_get_value_double.html
-//   napi_get_value_int64: https://docs.rs/nodejs-sys/0.3.0/nodejs_sys/fn.napi_get_value_int64.html
-//   napi_get_value_string_utf8: https://docs.rs/nodejs-sys/0.3.0/nodejs_sys/fn.napi_get_value_string_utf8.html
-//   napi_queue_async_work: https://docs.rs/node-api-sys/0.3.0/node_api_sys/fn.napi_queue_async_work.html
-//   napi_reject_deferred: https://docs.rs/nodejs-sys/0.3.0/nodejs_sys/fn.napi_reject_deferred.html
-//   napi_resolve_deferred: https://docs.rs/nodejs-sys/0.3.0/nodejs_sys/fn.napi_resolve_deferred.html
-//   napi_set_named_property: https://docs.rs/nodejs-sys/0.3.0/nodejs_sys/fn.napi_set_named_property.html
+use std::ffi::CString;
 
 // --- Register module --- //
 
@@ -73,91 +21,19 @@ pub unsafe extern "C" fn napi_register_module_v1(
     println!("lib.rs: napi_register_module_v1()");
 
     // --- 1. Create a function that returns a string: sayHello() => string --- //
-
-    let str1 = CString::new("sayHello").expect("CString::new failed");
-    let mut result1: napi_value = std::mem::zeroed();
-
-    napi_create_function(
-        env,
-        str_ptr(&str1),
-        str_len(&str1),
-        Some(say_hello),
-        std::ptr::null_mut(),
-        &mut result1,
-    );
-
-    napi_set_named_property(env, exports, str_ptr(&str1), result1);
+    create_function(env, exports, "sayHello", say_hello);
 
     // --- 2. Create a function passing in a string: sendMessage(string) -> () --- //
-
-    let str2 = CString::new("sendMessage").expect("CString::new failed");
-    let mut result2: napi_value = std::mem::zeroed();
-
-    napi_create_function(
-        env,
-        str_ptr(&str2),
-        str_len(&str2),
-        Some(send_message),
-        std::ptr::null_mut(),
-        &mut result2,
-    );
-
-    napi_set_named_property(env, exports, str_ptr(&str2), result2);
+    create_function(env, exports, "sendMessage", send_message);
 
     // --- 3. Create a function passing numbers addNumbers(x,y) -> number --- //
-
-    let str3 = CString::new("addNumbers").expect("CString::new failed");
-    let mut result3: napi_value = std::mem::zeroed();
-
-    napi_create_function(
-        env,
-        str_ptr(&str3),
-        str_len(&str3),
-        Some(add_numbers),
-        std::ptr::null_mut(),
-        &mut result3,
-    );
-
-    napi_set_named_property(env, exports, str_ptr(&str3), result3);
+    create_function(env, exports, "addNumbers", add_numbers);
 
     // --- 4. Create a function that returns an object getUser() -> object --- //
-    {
-        let key = CString::new("name").expect("CString::new failed");
-        let mut local: napi_value = std::mem::zeroed();
-        let value = CString::new("Kiffin").expect("CString::new failed");
-        napi_create_string_utf8(env, str_ptr(&value), str_len(&value), &mut local);
-        napi_set_named_property(env, exports, str_ptr(&key), local);
-    }
-
-    let str4 = CString::new("getUser").expect("CString::new failed");
-    let mut result4: napi_value = std::mem::zeroed();
-
-    napi_create_function(
-        env,
-        str_ptr(&str4),
-        str_len(&str4),
-        Some(get_user),
-        std::ptr::null_mut(),
-        &mut result4,
-    );
-
-    napi_set_named_property(env, exports, str_ptr(&str4), result4);
+    create_function(env, exports, "getUser", get_user);
 
     // --- 5. Create an async function fibonacci(n) -> number --- //
-
-    let str5 = CString::new("fibonacci").expect("CString::new failed");
-    let mut result5: napi_value = std::mem::zeroed();
-
-    napi_create_function(
-        env,
-        str_ptr(&str5),
-        str_len(&str5),
-        Some(fibonacci),
-        std::ptr::null_mut(),
-        &mut result5,
-    );
-
-    napi_set_named_property(env, exports, str_ptr(&str5), result5);
+    create_function(env, exports, "fibonacci", fibonacci);
 
     exports
 }
@@ -401,6 +277,24 @@ pub unsafe extern "C" fn complete(env: napi_env, _status: napi_status, data: *mu
 }
 
 // --- Private --- //
+
+type CallbackFn = unsafe extern "C" fn(napi_env, napi_callback_info) -> napi_value;
+
+unsafe fn create_function(env: napi_env, exports: napi_value, name: &str, func: CallbackFn) {
+    let cname = CString::new(name).expect("CString::new failed");
+    let mut result: napi_value = std::mem::zeroed();
+
+    napi_create_function(
+        env,
+        str_ptr(&cname),
+        str_len(&cname),
+        Some(func),
+        std::ptr::null_mut(),
+        &mut result,
+    );
+
+    napi_set_named_property(env, exports, str_ptr(&cname), result);
+}
 
 fn str_ptr(s: &CString) -> *const i8 {
     s.as_ptr()
