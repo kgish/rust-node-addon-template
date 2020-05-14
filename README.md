@@ -87,7 +87,17 @@ The project directory should look like this:
 
 Add the `nodejs-sys` crate (native bindings to the nodejs' n-api) as a dependency to the `Cargo.toml` file:
 
+Cargo.toml
 ```text
+[package]
+name = "rust-node-addon-template"
+version = "0.1.0"
+authors = ["Kiffin Gish <kiffin.gish@planet.nl>"]
+edition = "2018"
+
+[lib]
+crate-type=["cdylib"]
+
 [dependencies]
 nodejs-sys = "0.3.0"
 ```
@@ -125,31 +135,29 @@ $ ./run.sh
 
 ## FFI bindings
 
-`std::ffi::CString` - A type representing an owned, C-compatible, nul-terminated string with no
-nul bytes in the middle.
-This type serves the purpose of being able to safely generate a C-compatible string from a Rust
-byte slice or vector. An instance of this type is a static guarantee that the underlying bytes
-contain no interior 0 bytes ("nul characters") and that the final byte is 0 ("nul terminator").
-See: https://doc.rust-lang.org/std/ffi/struct.CString.html
+`std::ffi::CString` - A type representing an owned, C-compatible, nul-terminated string with no nul bytes in the middle.
+This type serves the purpose of being able to safely generate a C-compatible string from a Rust byte slice or vector. An
+instance of this type is a static guarantee that the underlying bytes contain no interior 0 bytes ("nul characters") and
+that the final byte is 0 ("nul terminator").
 
-std::ffi::c_void - Equivalent to C's void type when used as a pointer.
+See: [Struct std::ffi::CString](https://doc.rust-lang.org/std/ffi/struct.CString.html)
+
+`std::ffi::c_void` - Equivalent to C's void type when used as a pointer.
 In essence, *const c_void is equivalent to C's const void* and *mut c_void is equivalent to
 C's void*. That said, this is not the same as C's void return type, which is Rust's () type.
-See: https://doc.rust-lang.org/std/ffi/enum.c_void.html
 
-## No mangle
+See: [Enum std::ffi::c_void](https://doc.rust-lang.org/std/ffi/enum.c_void.html)
 
-The `#[no_mangle]` attribute turns off Rust’s name mangling, so that it is easier to link to. The Rust compiler 
+`#[no_mangle]` - this attribute turns off Rust’s name mangling, so that it is easier to link to. The Rust compiler 
 mangles symbol names differently than native code linkers expect and therefore needs to be told NOT to mangle any 
 functions exported to the outside world.
 
-### extern "C"
+## extern "C"
 
 By default, any function you write in Rust will use the Rust ABI. Instead, when building outwards facing FFI APIs we 
 need to tell the compiler to use the system ABI.
 
-See the chapter [Unsafe Rust](https://doc.rust-lang.org/book/ch19-01-unsafe-rust.html)
-in the Rust Book.
+See the chapter [Unsafe Rust](https://doc.rust-lang.org/book/ch19-01-unsafe-rust.html) in the Rust Book.
 
 ## Raw bindings to the Node.js API
 
@@ -188,7 +196,84 @@ Functions:
 
 ## Neon
 
-TODO.
+Rust bindings for writing safe and fast native Node.js modules.
+
+### Installation
+
+```bash
+$ npm install -g neon-cli
+$ neon new my-project
+$ cd my-project
+$ npm install
+```
+The directory tree should look something like this.
+
+```
+.
+├── lib
+│   └── index.js
+├── native
+│   ├── build.rs
+│   ├── Cargo.toml
+│   └── src
+│       └── lib.rs
+├── package.json
+└── README.md
+```
+
+lib/index.js
+```javascript
+const addon = require('../native/index.node');
+
+// Add stuff you want to use here
+```
+native/build.rs
+```rust
+extern crate neon_build;
+
+fn main() {
+    neon_build::setup(); // must be called in build.rs
+
+    // add project-specific build logic here...
+}
+```
+
+native/Cargo.html
+```
+[package]
+name = "my-project"
+version = "0.1.0"
+authors = ["Kiffin Gish <kiffin.gish@planet.nl>"]
+license = "MIT"
+build = "build.rs"
+edition = "2018"
+exclude = ["artifacts.json", "index.node"]
+
+[lib]
+name = "my_project"
+crate-type = ["cdylib"]
+
+[build-dependencies]
+neon-build = "0.4.0"
+
+[dependencies]
+neon = "0.4.0"
+```
+
+native/src/lib.rs
+```
+use neon::prelude::*;
+
+fn hello(mut cx: FunctionContext) -> JsResult<JsString> {
+    Ok(cx.string("hello node"))
+}
+
+register_module!(mut cx, {
+    cx.export_function("hello", hello)
+});
+```
+
+
 
 ## References
 

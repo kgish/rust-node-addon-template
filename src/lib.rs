@@ -20,19 +20,10 @@ pub unsafe extern "C" fn napi_register_module_v1(
 ) -> nodejs_sys::napi_value {
     println!("lib.rs: napi_register_module_v1()");
 
-    // --- 1. Create a function that returns a string: sayHello() => string --- //
     create_function(env, exports, "sayHello", say_hello);
-
-    // --- 2. Create a function passing in a string: sendMessage(string) -> () --- //
     create_function(env, exports, "sendMessage", send_message);
-
-    // --- 3. Create a function passing numbers addNumbers(x,y) -> number --- //
     create_function(env, exports, "addNumbers", add_numbers);
-
-    // --- 4. Create a function that returns an object getUser() -> object --- //
     create_function(env, exports, "getUser", get_user);
-
-    // --- 5. Create an async function fibonacci(n) -> number --- //
     create_function(env, exports, "fibonacci", fibonacci);
 
     exports
@@ -286,8 +277,8 @@ unsafe fn create_function(env: napi_env, exports: napi_value, name: &str, func: 
 
     napi_create_function(
         env,
-        str_ptr(&cname),
-        str_len(&cname),
+        cname.as_ptr(),
+        cname.as_bytes().len(),
         Some(func),
         std::ptr::null_mut(),
         &mut result,
