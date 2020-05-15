@@ -1,6 +1,6 @@
 use neon::prelude::*;
 
-// --- 4. get_user() => user --- //
+// --- get_user() => user --- //
 pub fn run(mut cx: FunctionContext) -> JsResult<JsObject> {
     struct User { pub name: String, pub age: u8, }
 

@@ -1,9 +1,4 @@
-use nodejs_sys::{
-    napi_callback_info,
-    napi_create_string_utf8,
-    napi_env,
-    napi_value,
-};
+use nodejs_sys::{napi_callback_info, napi_create_string_utf8, napi_env, napi_value};
 use std::ffi::CString;
 
 // --- say_hello() => string --- //
@@ -17,4 +12,3 @@ pub unsafe extern "C" fn run(env: napi_env, _info: napi_callback_info) -> napi_v
 
     result
 }
-
