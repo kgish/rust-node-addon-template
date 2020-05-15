@@ -38,5 +38,4 @@ unsafe fn create_function(env: napi_env, exports: napi_value, name: &str, func: 
     );
 
     napi_set_named_property(env, exports, cname.as_ptr(), result);
-
 }
