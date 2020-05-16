@@ -6,6 +6,23 @@ use nodejs_sys::{
 
 use std::ffi::CString;
 
+// Register module
+// The N-API documentation recommends `NAPI_MODULE_INIT()` macro for module registration which
+// compiles to the `napi_register_module_v1` function.
+//
+// -------------------------------------------------------------------------------
+// addon_node.c
+// #include <node_api.h>
+// #include "addon.h"
+//
+// NAPI_MODULE_INIT() {
+//   // This function body is expected to return a `napi_value`.
+//   // The variables `napi_env env` and `napi_value exports` may be used within
+//   // the body, as they are provided by the definition of `NAPI_MODULE_INIT()`.
+//   return create_addon(env);
+// }
+// -------------------------------------------------------------------------------
+//
 #[no_mangle]
 pub unsafe extern "C" fn napi_register_module_v1(
     env: napi_env,
