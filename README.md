@@ -15,7 +15,8 @@ For this project template, the following is required:
 * [npm](https://www.npmjs.com)
 * [nvm](https://github.com/nvm-sh/nvm/blob/master/README.md)
 
-You will also require the clang and llvm-dev libraries:
+In order to build the nodejs-sys crate (belwo) you need libclang since bindings are being generated at build-time by 
+bindgen. Therefore, you will require the clang and llvm-dev libraries:
 
 ```bash
 $ sudo apt-get install llvm-dev clang

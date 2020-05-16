@@ -79,7 +79,7 @@ pub unsafe extern "C" fn run(env: napi_env, info: napi_callback_info) -> napi_va
 pub unsafe extern "C" fn perform(_env: napi_env, data: *mut c_void) {
     let mut t: Box<Data> = Box::from_raw(std::mem::transmute(data));
 
-    let n = fib(t.val);
+    let n = compute(t.val);
 
     t.result = Some(Ok(n));
 
@@ -139,7 +139,7 @@ pub unsafe extern "C" fn complete(env: napi_env, _status: napi_status, data: *mu
     napi_delete_async_work(env, t.work);
 }
 
-fn fib(n: u64) -> u64 {
+fn compute(n: u64) -> u64 {
     let mut result = 1;
     let mut previous = 0;
 
@@ -152,10 +152,3 @@ fn fib(n: u64) -> u64 {
     println!("lib.rs: fib({:?}) result='{:?}'", n, result);
     result
 }
-
-// fn fib(n: i64) -> i64 {
-//   return match n {
-//     1 | 2 => 1,
-//     _ => fib(n - 1) + fib(n - 2)
-//   }
-// }

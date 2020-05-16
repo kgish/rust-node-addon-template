@@ -3,9 +3,8 @@ mod examples;
 use nodejs_sys::{
     napi_callback_info, napi_create_function, napi_env, napi_set_named_property, napi_value,
 };
-use std::ffi::CString;
 
-type CallbackFn = unsafe extern "C" fn(napi_env, napi_callback_info) -> napi_value;
+use std::ffi::CString;
 
 #[no_mangle]
 pub unsafe extern "C" fn napi_register_module_v1(
@@ -23,11 +22,26 @@ pub unsafe extern "C" fn napi_register_module_v1(
     exports
 }
 
+type CallbackFn = unsafe extern "C" fn(napi_env, napi_callback_info) -> napi_value;
+
 unsafe fn create_function(env: napi_env, exports: napi_value, name: &str, func: CallbackFn) {
     let cname = CString::new(name).expect("CString::new failed");
     let mut result: napi_value = std::mem::zeroed();
 
     println!("lib.rs: napi_create_function({})", name);
+
+    // Create function
+    // https://docs.rs/nodejs-sys/0.3.0/nodejs_sys/fn.napi_create_function.html
+    //
+    // pub unsafe extern "C" fn napi_create_function(
+    //     env: napi_env,
+    //     utf8name: *const c_char,
+    //     length: usize,
+    //     cb: napi_callback,
+    //     data: *mut c_void,
+    //     result: *mut napi_value
+    // ) -> napi_status
+    //
     napi_create_function(
         env,
         cname.as_ptr(),
@@ -37,5 +51,15 @@ unsafe fn create_function(env: napi_env, exports: napi_value, name: &str, func: 
         &mut result,
     );
 
+    // Set named property
+    // https://docs.rs/nodejs-sys/0.3.0/nodejs_sys/fn.napi_set_named_property.html
+    //
+    // pub unsafe extern "C" fn napi_set_named_property(
+    //     env: napi_env,
+    //     object: napi_value,
+    //     utf8name: *const c_char,
+    //     value: napi_value
+    // ) -> napi_status
+    //
     napi_set_named_property(env, exports, cname.as_ptr(), result);
 }

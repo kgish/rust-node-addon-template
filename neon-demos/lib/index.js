@@ -34,10 +34,10 @@ if (n === 0 || n === 5) {
     if (err) {
       console.log(`index.js: fibonacci(${x}) => NOK '${err}'`)
     } else {
-      console.log(`index.js: fibonacci(${x}) => OK '${result}'`);
+      console.log(`index.js: fibonacci(${x}) => OK '${result}' (${typeof result})`);
     }
   });
 
-  console.log(`computing fibonacci(${x}) in background thread...`);
-  console.log('main thread is still responsive!');
+  console.log(`index.js: computing fibonacci(${x}) in background thread...`);
+  console.log('index.js: main thread is still responsive!');
 }

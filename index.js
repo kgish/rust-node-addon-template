@@ -31,10 +31,14 @@ if (n === 0 || n === 4) {
 if (n === 0 || n === 5) {
   console.log(`index.js: fibonacci = '${addon.fibonacci}'`);
   const x = 80;
+  // const x = 100000;
   addon.fibonacci(x).then(
-    result => console.log(`index.js: fibonacci(${x}) => OK '${result}'`),
+    result => console.log(`index.js: fibonacci(${x}) => OK '${result}' (${typeof result})`),
     error => console.log(`index.js: fibonacci(${x}) => NOK '${error}'`)
   ).catch(
     error => console.log(`index.js: fibonacci(${x}) => NOK '${error}'`)
   );
+
+  console.log(`index.js: computing fibonacci(${x}) in background thread...`);
+  console.log('index.js: main thread is still responsive!');
 }
