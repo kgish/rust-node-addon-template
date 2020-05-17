@@ -149,14 +149,14 @@ C's void*. That said, this is not the same as C's void return type, which is Rus
 
 See: [Enum std::ffi::c_void](https://doc.rust-lang.org/std/ffi/enum.c_void.html)
 
-`#[no_mangle]` - this attribute turns off Rust’s name mangling, so that it is easier to link to. The Rust compiler 
-mangles symbol names differently than native code linkers expect and therefore needs to be told NOT to mangle any 
-functions exported to the outside world.
+`#[no_mangle]` - this compiler directive turns off Rust’s name mangling, so that it is easier to link to. The Rust 
+compiler mangles symbol names differently than native code linkers expect and therefore needs to be told NOT to 
+mangle any functions exported to the outside world.
 
 ## extern "C"
 
 By default, any function you write in Rust will use the Rust ABI. Instead, when building outwards facing FFI APIs we 
-need to tell the compiler to use the system ABI.
+need to tell the compiler to use the system ABI, in this case use the "C" call stack.
 
 See the chapter [Unsafe Rust](https://doc.rust-lang.org/book/ch19-01-unsafe-rust.html) in the Rust Book.
 
@@ -274,21 +274,25 @@ register_module!(mut cx, {
 });
 ```
 
-
-
 ## References
 
 Here are a few relevant links that you might find interesting.
 
-* [N-API Documentation](https://nodejs.org/api/n-api.html#n_api_n_api)
+Documentation:
+* [Node.js API](https://nodejs.org/api/n-api.html#n_api_n_api)
 * [nodejs-sys](https://crates.io/crates/nodejs-sys)
 * [ABI Stability in Node.js](https://nodejs.org/en/docs/guides/abi-stability)
 * [Application Binary Interface (ABI)](https://doc.rust-lang.org/reference/abi.html)
+* [Neon](https://neon-bindings.com)
+
+Articles:
 * [Rust and Node.js: A match made in heaven](https://blog.logrocket.com/rust-and-node-js-a-match-made-in-heaven/)
 * [Writing fast and safe native Node.js modules with Rust](https://blog.risingstack.com/node-js-native-modules-with-rust/)
 * [Using rust modules in JavaScript/Web Development](https://medium.com/@atulanand94/using-rust-modules-for-javascript-web-development-part-i-e6dec27df7b2)
-* [Neon](https://neon-bindings.com)
+
+Videos:
 * [An introduction to Neon](https://www.youtube.com/watch?v=yj2nD9hB3D0)
 * [Writing Node.js Modules in Rust](https://www.youtube.com/watch?v=5Cbjk8w9mEM)
+* [Fast & Safe Native node.js Modules with Rust](https://www.youtube.com/watch?v=zz1Gie9FkbI)
 * [High Performance Apps with JavaScript and Rust, It's Easier Than You Think](https://www.youtube.com/watch?v=Pfbw4YPrwf4)
 
