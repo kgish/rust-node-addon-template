@@ -1,4 +1,11 @@
-# Rust for web developers
+# Presentation Notes
+
+Who am I?
+
+* Have 35+ years in the wonderful world of software development
+* Grew up on Assembly and C/C++.
+
+What is Rust?
 
 Rust is a systems programming language which is safe, concurrent and fast.
 
@@ -12,13 +19,16 @@ Interoperability.
 
 Thread safe
 
-Performance
+High performance
 
-Foreign function interface (FFI) is a mechanism by which a program written in one programming language can call routines or make use of services written in another.
+Foreign function interface (FFI) is a mechanism by which a program written in one programming language can call 
+routines or make use of services written in another.
 
 https://doc.rust-lang.org/nomicon/ffi.html
 
-Functions that are marked extern are made compatible with C code during compilation. They may be called from C code with any parameter values. The exact syntax is extern "<ABI>" where ABI is a calling convention and depends on the target platform. The default one is C which corresponds to a standard C calling convention on the target platform.
+Functions that are marked extern are made compatible with C code during compilation. They may be called from C code 
+with any parameter values. The exact syntax is extern "<ABI>" where ABI is a calling convention and depends on the 
+target platform. The default one is C which corresponds to a standard C calling convention on the target platform.
 
 ```
 // export a C-compatible function
