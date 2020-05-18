@@ -46,6 +46,7 @@ pub unsafe extern "C" fn run(env: napi_env, info: napi_callback_info) -> napi_va
         async_name.as_bytes().len(),
         &mut work_name,
     );
+
     napi_create_promise(env, &mut deferred, &mut promise);
 
     let v = Data {

@@ -15,8 +15,8 @@ For this project template, the following is required:
 * [npm](https://www.npmjs.com)
 * [nvm](https://github.com/nvm-sh/nvm/blob/master/README.md)
 
-In order to build the nodejs-sys crate (belwo) you need libclang since bindings are being generated at build-time by 
-bindgen. Therefore, you will require the clang and llvm-dev libraries:
+In order to build the `nodejs-sys` crate (below) you need `libclang` since bindings are being generated at build-time by 
+`bindgen`. Therefore, you will require the `clang` and `llvm-dev` libraries:
 
 ```bash
 $ sudo apt-get install llvm-dev clang
@@ -158,6 +158,17 @@ mangle any functions exported to the outside world.
 By default, any function you write in Rust will use the Rust ABI. Instead, when building outwards facing FFI APIs we 
 need to tell the compiler to use the system ABI, in this case use the "C" call stack.
 
+## unsafe
+
+Allows you to write code whose safety relies on invariants that the compiler is unable to check while you know for sure 
+the code will remain safe. So for example:
+
+* Accessing hardware.
+* External code.
+* Concurrency.
+* Borrow checker limitations.
+* Performance improvements.
+
 See the chapter [Unsafe Rust](https://doc.rust-lang.org/book/ch19-01-unsafe-rust.html) in the Rust Book.
 
 ## Raw bindings to the Node.js API
@@ -194,6 +205,8 @@ Functions:
   * [napi_reject_deferred](https://docs.rs/nodejs-sys/0.3.0/nodejs_sys/fn.napi_reject_deferred.html)
   * [napi_resolve_deferred](https://docs.rs/nodejs-sys/0.3.0/nodejs_sys/fn.napi_resolve_deferred.html)
   * [napi_set_named_property](https://docs.rs/nodejs-sys/0.3.0/nodejs_sys/fn.napi_set_named_property.html)
+
+Note that the functions are all `unsafe`
 
 ## Neon
 
@@ -295,4 +308,5 @@ Videos:
 * [Writing Node.js Modules in Rust](https://www.youtube.com/watch?v=5Cbjk8w9mEM)
 * [Fast & Safe Native node.js Modules with Rust](https://www.youtube.com/watch?v=zz1Gie9FkbI)
 * [High Performance Apps with JavaScript and Rust, It's Easier Than You Think](https://www.youtube.com/watch?v=Pfbw4YPrwf4)
+* [Demystifying unsafe code](https://www.youtube.com/watch?v=QAz-maaH0KM)
 
