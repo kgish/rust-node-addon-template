@@ -4,7 +4,7 @@ use nodejs_sys::{
 };
 
 // send_message(msg) => () --- //
-pub unsafe extern "C" fn run(env: napi_env, info: napi_callback_info) -> napi_value {
+pub unsafe extern "C" fn send_message(env: napi_env, info: napi_callback_info) -> napi_value {
     // Extract the initialized data -- this is only allowed *after* properly initializing `buffer`
     let mut message: [napi_value; 1] = std::mem::MaybeUninit::zeroed().assume_init();
     let mut argc = 1 as usize;
@@ -32,10 +32,10 @@ pub unsafe extern "C" fn run(env: napi_env, info: napi_callback_info) -> napi_va
 
     let s = String::from_raw_parts(raw, capacity as usize, size);
 
-    println!("lib.rs: send_message({})", s);
-
     let mut und: napi_value = std::mem::zeroed();
     napi_get_undefined(env, &mut und);
+
+    println!("RUST: send_message({}) => {:?}", s, und);
 
     und
 }

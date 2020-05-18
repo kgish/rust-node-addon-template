@@ -6,6 +6,12 @@ use nodejs_sys::{
 
 use std::ffi::CString;
 
+use examples::say_hello::{say_hello};
+use examples::send_message::{send_message};
+use examples::add_numbers::{add_numbers};
+use examples::get_user::{get_user};
+use examples::fibonacci_async::{fibonacci_async};
+
 // Register module
 // The N-API documentation recommends `NAPI_MODULE_INIT()` macro for module registration which
 // compiles to the `napi_register_module_v1` function.
@@ -28,13 +34,13 @@ pub unsafe extern "C" fn napi_register_module_v1(
     env: napi_env,
     exports: napi_value,
 ) -> nodejs_sys::napi_value {
-    println!("lib.rs: napi_register_module_v1()");
+    println!("RUST: napi_register_module_v1()");
 
-    create_function(env, exports, "sayHello", examples::say_hello::run);
-    create_function(env, exports, "sendMessage", examples::send_message::run);
-    create_function(env, exports, "addNumbers", examples::add_numbers::run);
-    create_function(env, exports, "getUser", examples::get_user::run);
-    create_function(env, exports, "fibonacci", examples::fibonacci_async::run);
+    create_function(env, exports, "sayHello", say_hello);
+    create_function(env, exports, "sendMessage", send_message);
+    create_function(env, exports, "addNumbers", add_numbers);
+    create_function(env, exports, "getUser", get_user);
+    create_function(env, exports, "fibonacci", fibonacci_async);
 
     exports
 }
@@ -45,7 +51,7 @@ unsafe fn create_function(env: napi_env, exports: napi_value, name: &str, func: 
     let cname = CString::new(name).expect("CString::new failed");
     let mut result: napi_value = std::mem::zeroed();
 
-    println!("lib.rs: napi_create_function({})", name);
+    println!("RUST: napi_create_function({})", name);
 
     // Create function
     // https://docs.rs/nodejs-sys/0.3.0/nodejs_sys/fn.napi_create_function.html

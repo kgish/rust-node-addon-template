@@ -1,5 +1,5 @@
 {
-  "name": "neon-say-hello",
+  "name": "neon-demos",
   "version": "0.1.0",
   "main": "lib/index.js",
   "dependencies": {

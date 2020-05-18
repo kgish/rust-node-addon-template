@@ -4,7 +4,7 @@ use nodejs_sys::{
 };
 
 // --- add_numbers(x,y) => number --- //
-pub unsafe extern "C" fn run(env: napi_env, info: napi_callback_info) -> napi_value {
+pub unsafe extern "C" fn add_numbers(env: napi_env, info: napi_callback_info) -> napi_value {
     // Extract the initialized data -- this is only allowed *after* properly initializing `buffer`
     let mut buffer: [napi_value; 2] = std::mem::MaybeUninit::zeroed().assume_init();
 
@@ -28,9 +28,9 @@ pub unsafe extern "C" fn run(env: napi_env, info: napi_callback_info) -> napi_va
 
     let value = x + y;
 
-    println!("lib.rs: add_doubles({},{}) => {:?}", x, y, value);
-
     napi_create_double(env, value, &mut result);
+
+    println!("RUST: add_numbers({},{}) => {:?} ({:?})", x, y, value, result);
 
     result
 }

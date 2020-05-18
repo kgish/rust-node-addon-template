@@ -169,6 +169,9 @@ the code will remain safe. So for example:
 * Borrow checker limitations.
 * Performance improvements.
 
+We are asserting that the compiler should trust the C code. Note that the borrow checker is improving over time, so you
+probably not overrule it and just rewrite your code to work as is.
+
 See the chapter [Unsafe Rust](https://doc.rust-lang.org/book/ch19-01-unsafe-rust.html) in the Rust Book.
 
 ## Raw bindings to the Node.js API

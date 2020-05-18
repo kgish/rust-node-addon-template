@@ -1,5 +1,5 @@
-pub mod add_numbers;
-pub mod fibonacci_async;
-pub mod get_user;
-pub mod say_hello;
-pub mod send_message;
+pub(crate) mod add_numbers;
+pub(crate) mod fibonacci_async;
+pub(crate) mod get_user;
+pub(crate) mod say_hello;
+pub(crate) mod send_message;

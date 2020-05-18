@@ -7,7 +7,7 @@ use nodejs_sys::{
 use std::ffi::c_void;
 use std::ffi::CString;
 
-// --- fibonacci(n) => number --- //
+// --- fibonacci_async(n) => number --- //
 #[derive(Debug, Clone)]
 struct Data {
     deferred: napi_deferred,
@@ -16,7 +16,7 @@ struct Data {
     result: Option<Result<u64, String>>,
 }
 
-pub unsafe extern "C" fn run(env: napi_env, info: napi_callback_info) -> napi_value {
+pub unsafe extern "C" fn fibonacci_async(env: napi_env, info: napi_callback_info) -> napi_value {
     let mut buffer: Vec<napi_value> = Vec::with_capacity(1);
     let p = buffer.as_mut_ptr();
     let mut argc = 1 as usize;
@@ -33,6 +33,8 @@ pub unsafe extern "C" fn run(env: napi_env, info: napi_callback_info) -> napi_va
 
     let mut start = 0;
     napi_get_value_int64(env, *p, &mut start);
+
+    println!("RUST: fibonacci() start='{}'", start);
 
     let mut promise: napi_value = std::mem::zeroed();
     let mut deferred: napi_deferred = std::mem::zeroed();
@@ -72,7 +74,7 @@ pub unsafe extern "C" fn run(env: napi_env, info: napi_callback_info) -> napi_va
     napi_queue_async_work(env, work);
     (*raw).work = work;
 
-    println!("lib.rs: fibonacci({})", start);
+    println!("RUST: fibonacci() start='{}' promise='{:?}'", start, promise);
 
     promise
 }
@@ -80,12 +82,14 @@ pub unsafe extern "C" fn run(env: napi_env, info: napi_callback_info) -> napi_va
 pub unsafe extern "C" fn perform(_env: napi_env, data: *mut c_void) {
     let mut t: Box<Data> = Box::from_raw(std::mem::transmute(data));
 
+    println!("RUST: perform() t='{:?}'", t);
+
     let n = compute(t.val);
 
     t.result = Some(Ok(n));
 
     println!(
-        "lib.rs: perform() val='{:?}' result='{:?}'",
+        "RUST: perform() val='{:?}' result='{:?}'",
         t.val, t.result
     );
 
@@ -97,7 +101,7 @@ pub unsafe extern "C" fn complete(env: napi_env, _status: napi_status, data: *mu
     let v = match t.result {
         Some(d) => match d {
             Ok(result) => {
-                println!("lib.rs: complete() result='{:?}'", result);
+                println!("RUST: complete() result='{:?}'", result);
                 result
             }
             Err(_) => {
@@ -150,6 +154,13 @@ fn compute(n: u64) -> u64 {
         previous = temp;
     }
 
-    println!("lib.rs: fib({:?}) result='{:?}'", n, result);
+    println!("RUST: compute({:?}) result='{:?}'", n, result);
     result
 }
+//
+// fn fib(n: i64) -> i64 {
+//   return match n {
+//     1 | 2 => 1,
+//     _ => fib(n - 1) + fib(n - 2)
+//   }
+// }

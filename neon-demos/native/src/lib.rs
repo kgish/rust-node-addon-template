@@ -2,12 +2,18 @@ mod examples;
 
 use neon::register_module;
 
+use examples::say_hello::{say_hello};
+use examples::send_message::{send_message};
+use examples::add_numbers::{add_numbers};
+use examples::get_user::{get_user};
+use examples::fibonacci_async::{fibonacci_async};
+
 // --- Register and export all functions --- //
 register_module!(mut m, {
-    m.export_function("sayHello", examples::say_hello::run)?;
-    m.export_function("sendMessage", examples::send_message::run)?;
-    m.export_function("addNumbers", examples::add_numbers::run)?;
-    m.export_function("getUser", examples::get_user::run)?;
-    m.export_function("fibonacci", examples::fibonacci_async::run)?;
+    m.export_function("sayHello", say_hello)?;
+    m.export_function("sendMessage", send_message)?;
+    m.export_function("addNumbers", add_numbers)?;
+    m.export_function("getUser", get_user)?;
+    m.export_function("fibonacci", fibonacci_async)?;
     Ok(())
 });

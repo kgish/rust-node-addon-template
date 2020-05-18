@@ -6,7 +6,7 @@ use nodejs_sys::{
 use std::ffi::CString;
 
 // --- get_user() => user --- //
-pub unsafe extern "C" fn run(env: napi_env, _info: napi_callback_info) -> napi_value {
+pub unsafe extern "C" fn get_user(env: napi_env, _info: napi_callback_info) -> napi_value {
     let mut result: napi_value = std::mem::zeroed();
 
     let mut val_name: napi_value = std::mem::zeroed();
@@ -29,7 +29,7 @@ pub unsafe extern "C" fn run(env: napi_env, _info: napi_callback_info) -> napi_v
     napi_set_named_property(env, result, cstr_key_name.as_ptr(), val_name);
     napi_set_named_property(env, result, cstr_key_age.as_ptr(), val_age);
 
-    println!("lib.rs: get_user() => ({:?})", result);
+    println!("RUST: get_user() => ({:?})", result);
 
     result
 }
