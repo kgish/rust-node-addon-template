@@ -27,7 +27,7 @@ routines or make use of services written in another.
 https://doc.rust-lang.org/nomicon/ffi.html
 
 Functions that are marked extern are made compatible with C code during compilation. They may be called from C code 
-with any parameter values. The exact syntax is extern "<ABI>" where ABI is a calling convention and depends on the 
+with any parameter values. The exact syntax is extern "ABI" where ABI is a calling convention and depends on the 
 target platform. The default one is C which corresponds to a standard C calling convention on the target platform.
 
 ```
