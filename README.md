@@ -4,7 +4,9 @@ A simple Rust Node addon example template using N-API
 
 ## Introduction
 
-This is part of the presentation that I gave at a recent [Berlin Rust Meetup](https://www.meetup.com/Rust-Berlin/).
+This is an example template using the [nodejs-sys](https://crates.io/crates/nodejs-sys) and 
+[Neon](https://neon-bindings.com) libraries to demonstrate ways of building a simple Node addon
+in Rust.
 
 ## Requirements
 
@@ -51,13 +53,17 @@ $ ./build.sh
 $ ./run.sh [n]
 ```
 
-where optional n = 1 - 5 in order to run only given example:
+where:
+
+```
+ptional n = 1 - 5 in order to run only given example:
 
 1. Function sayHello() => void
 2. Function sendMessage(str) => void
 3. Function addNumbers(x,y) => number
 4. Function getUser() => user
-5. Promise fibonacci(n) => number
+5. Async function fibonacci(n) => number
+```
 
 ## From Scratch
 
