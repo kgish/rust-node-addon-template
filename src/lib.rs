@@ -6,11 +6,11 @@ use nodejs_sys::{
 
 use std::ffi::CString;
 
-use examples::say_hello::{say_hello};
-use examples::send_message::{send_message};
-use examples::add_numbers::{add_numbers};
-use examples::get_user::{get_user};
-use examples::fibonacci_async::{fibonacci_async};
+use examples::add_numbers::add_numbers;
+use examples::fibonacci_async::fibonacci_async;
+use examples::get_user::get_user;
+use examples::say_hello::say_hello;
+use examples::send_message::send_message;
 
 // Register module
 // The N-API documentation recommends `NAPI_MODULE_INIT()` macro for module registration which
