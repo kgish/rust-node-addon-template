@@ -56,7 +56,7 @@ $ ./run.sh [n]
 where:
 
 ```
-ptional n = 1 - 5 in order to run only given example:
+optional n = 1 - 5 in order to run only given example:
 
 1. Function sayHello() => void
 2. Function sendMessage(str) => void
