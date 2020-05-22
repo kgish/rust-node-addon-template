@@ -8,7 +8,7 @@ This is an example template using the [nodejs-sys](https://crates.io/crates/node
 [Neon](https://neon-bindings.com) libraries to demonstrate ways of building a simple Node addon
 in Rust.
 
-See also: [Presentation](documents/Embedding-Rust-in-NodeJS-applications.pdf)
+See also: [Presentation](presentation/Embedding-Rust-in-NodeJS-applications.pdf)
 
 ## Requirements
 
