@@ -1,6 +1,10 @@
-// fibonacci_async.rs
 use neon::prelude::*;
 
+use num_bigint::BigUint;
+use num_traits::{One, Zero};
+use std::mem::replace;
+
+// --- fibonacci_async(n) => number --- //
 pub fn fibonacci_async(mut cx: FunctionContext) -> JsResult<JsUndefined> {
     let n = cx.argument::<JsNumber>(0)?.value() as usize;
     let cb = cx.argument::<JsFunction>(1)?;
