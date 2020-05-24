@@ -227,8 +227,8 @@ Rust bindings for writing safe and fast native Node.js modules.
 
 ```bash
 $ npm install -g neon-cli
-$ neon new my-project
-$ cd my-project
+$ neon new neon-demos
+$ cd neon-demos
 $ npm install
 ```
 The directory tree should look something like this.
@@ -266,7 +266,7 @@ fn main() {
 native/Cargo.html
 ```
 [package]
-name = "my-project"
+name = "neon-demos"
 version = "0.1.0"
 authors = ["Kiffin Gish <kiffin.gish@planet.nl>"]
 license = "MIT"
