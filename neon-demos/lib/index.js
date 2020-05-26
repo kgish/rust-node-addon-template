@@ -13,7 +13,8 @@ if (n === 0 || n === 2) {
 
 if (n === 0 || n === 3) {
   console.log(`NODE: addNumbers = '${addon.addNumbers}'`);
-  console.log(`NODE: addNumbers(3.1,4.3) => '${addon.addNumbers(3.1, 4.3)}'`);
+  const x = addon.addNumbers(3.1, 4.3)
+  console.log(`NODE: addNumbers(3.1,4.3) => '${x}' (${typeof x})`);
 }
 
 if (n === 0 || n === 4) {
